@@ -72,9 +72,11 @@
   }
   
   .hero .btn:hover {
-    background-color: #e6e9ee;
-    color: var(--primary);
+    background-color: var(--primary) !important;
+    color: var(--secondary) !important;
+    border-color: white !important;
   }
+  
   
   /* Profile Picture */
   .profile-pic {

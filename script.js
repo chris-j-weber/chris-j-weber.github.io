@@ -5,7 +5,7 @@ const createPublicationBlock = (pub, index, total) => {
     return `
       <div class="timeline-item mb-4 ${index === 0 ? 'pt-3 mt-3' : ''}">
         <div class="timeline-label mb-2 fw-semibold">${pub.date} – ${pub.title}</div>
-        <div class="row g-4 align-items-start">
+        <div class="row g-4 align-items-center">
           <div class="col-md-4">
             <img src="${pub.img}" class="img-fluid project-img" alt="${pub.title}">
           </div>
@@ -15,12 +15,12 @@ const createPublicationBlock = (pub, index, total) => {
             ${pub.doi ? `DOI: <a href="${pub.doi}" target="_blank">${pub.doi}</a>` : ""}</p>
             <p><strong>Abstract:</strong> ${pub.abstract}</p>
             <div class="d-flex gap-2 flex-wrap">
-              ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary" target="_blank">📄 Read Paper</a>` : ""}
-              ${pub.tool?.link ? `<a href="${pub.tool.link}" class="btn btn-outline-primary" target="_blank">🔗 Tool Page</a>` : ""}
               ${pub.additionalImages ? `
-                <button class="btn btn-outline-secondary toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#details-${idSuffix}" aria-expanded="false" aria-controls="details-${idSuffix}">
+                <button class="btn btn-outline-primary toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#details-${idSuffix}" aria-expanded="false" aria-controls="details-${idSuffix}">
                   🔽 More Info
                 </button>` : ""}
+              ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary" target="_blank">📄 Read Paper</a>` : ""}
+              ${pub.tool?.link ? `<a href="${pub.tool.link}" class="btn btn-outline-primary" target="_blank">🔗 Tool Page</a>` : ""}
             </div>
           </div>
         </div>
