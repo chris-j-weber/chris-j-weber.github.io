@@ -24,9 +24,16 @@
     color: #e0ecf8 !important; /* zartes Hellblau als Hover */
     text-decoration: underline;
   }
-  
-  
 
+  @media (max-width: 767.98px) {
+    .navbar-nav {
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+  }
+  
   
   body {
     font-family: 'Segoe UI', sans-serif;
