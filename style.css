@@ -36,6 +36,14 @@
     text-decoration: underline;
   }
   
+  @media (max-width: 410px) {
+    .navbar-nav .nav-link {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+  
+
   @media (max-width: 767.98px) {
     .navbar-nav {
       flex-direction: row !important;
@@ -147,14 +155,39 @@
 
   
   /* Project Image */
-  .project-img {
-    max-height: 400px;
+  .project-img-main {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 3px;
     background-color: #fff;
-    margin-left: 2rem;
+    display: block;
+    margin: 0 auto 1rem auto;
   }
+  
+  .project-img-extra {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto 1rem auto;
+  }
+  
+
+  /* Textspalte Abstand */
+  @media (min-width: 768px) {
+    .timeline-item .col-md-8 {
+      padding-left: 1.5rem;
+      padding-right: 2rem;
+    }
+  }
+
+  
   
   /* Abstract */
   .timeline-item .col-md-8 p {

@@ -7,7 +7,7 @@ const createPublicationBlock = (pub, index, total) => {
         <div class="timeline-label mb-2 fw-semibold">${pub.date} – ${pub.title}</div>
         <div class="row g-4 align-items-center">
           <div class="col-md-4">
-            <img src="${pub.img}" class="img-fluid project-img" alt="${pub.title}">
+            <img src="${pub.img}" class="img-fluid project-img-main" alt="${pub.title}">
           </div>
           <div class="col-md-8">
             <p><strong>Publication:</strong> <em>${pub.title}</em><br>
@@ -31,7 +31,7 @@ const createPublicationBlock = (pub, index, total) => {
               <div class="row g-3">
                 ${pub.additionalImages.map(img => `
                   <div class="col-md-4">
-                    <img src="${img}" class="img-fluid project-img" alt="Additional image">
+                    <img src="${img}" class="img-fluid project-img-extra" alt="Additional image">
                   </div>`).join("")}
               </div>
               ${pub.tool ? `<p class="mt-3"><strong>Tool:</strong> ${pub.tool.description}</p>` : ""}
