@@ -1,0 +1,36 @@
+[
+    {
+      "role": "AI Researcher & PhD Candidate",
+      "organization": "HFF Munich & LMU Munich",
+      "duration": "Since July 2022",
+      "description": "Research in AI for film production with focus on generative and assistive tools for creators.",
+      "type": "work"
+    },
+    {
+      "role": "NLP Engineer (Working Student)",
+      "organization": "HAWE Hydraulik",
+      "duration": "Aug 2019 – July 2020",
+      "description": "Developed a virtual assistant with SAP integration to streamline IT workflows using NLP and chatbot interfaces.",
+      "type": "work"
+    },
+    {
+      "role": "Python Developer (Working Student)",
+      "organization": "LMU CIS",
+      "duration": "Aug 2018 – June 2019",
+      "description": "Worked on OCR post-correction of historical texts as part of the OCR-D project, including interactive correction tools.",
+      "type": "work"
+    },
+    {
+      "role": "M.Sc. Informatics",
+      "organization": "LMU Munich",
+      "duration": "2019 – March 2022",
+      "type": "education"
+    },
+    {
+      "role": "B.Sc. Computational Linguistics",
+      "organization": "LMU Munich",
+      "duration": "2015 – 2019",
+      "type": "education"
+    }
+  ]
+  

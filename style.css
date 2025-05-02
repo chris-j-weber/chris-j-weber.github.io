@@ -1,13 +1,24 @@
-:root {
-    --primary: #4a90e2;       /* Frisches Blau */
-    --secondary: #e0ecf8;     /* Zartes Hellblau */
-    --accent: #2d3e50;        /* Dunkles Blau-Grau */
+/* CSS for the personal website */ 
+  :root {
+    --primary: #4a90e2;
+    --secondary: #e0ecf8;
+    --accent: #2d3e50;
     --text-muted: #6c757d;
-    --light-bg: #f9fafb;      /* Sehr helle Hintergrundfarbe */
+    --light-bg: #f9fafb;
     --card-bg: #ffffff;
   }
-
-  /* Navbar in Blau mit weißem Text */
+  
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--accent);
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Navbar */
   .navbar {
     background-color: var(--primary) !important;
     box-shadow: none !important;
@@ -21,10 +32,10 @@
   
   .navbar .nav-link:hover,
   .navbar .nav-link.active {
-    color: #e0ecf8 !important; /* zartes Hellblau als Hover */
+    color: var(--secondary) !important;
     text-decoration: underline;
   }
-
+  
   @media (max-width: 767.98px) {
     .navbar-nav {
       flex-direction: row !important;
@@ -34,13 +45,38 @@
     }
   }
   
-  
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: var(--light-bg);
-    color: var(--accent);
+  /* Hero */
+  .hero {
+    background-color: var(--primary);
+    padding: 2rem 0 2.5rem;
+    color: white;
+    text-align: center;
   }
-
+  
+  .hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hero p.lead {
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .hero .btn {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: white;
+    color: var(--primary);
+    border-color: white;
+  }
+  
+  .hero .btn:hover {
+    background-color: #e6e9ee;
+    color: var(--primary);
+  }
+  
+  /* Profile Picture */
   .profile-pic {
     width: 160px;
     height: 160px;
@@ -50,46 +86,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
-
-  
-
-
-  .hero {
-    background-color: var(--primary);
-    padding: 2rem 0 2.5rem; /* weniger vertikaler Raum */
-    color: white;
-    text-align: center;
-  }
-  
-  .hero h1 {
-    font-size: 2.5rem; /* leicht kleiner, aber präsent */
-    margin-bottom: 0.5rem;
-  }
-  
-  .hero p.lead {
-    font-size: 1.2rem;
-    margin-bottom: 1.2rem;
-  }
-  
-  .hero .btn-primary {
-    background-color: white;
-    color: var(--primary);
-    border-color: white;
-  }
-  
-  .hero .btn-primary:hover {
-    background-color: #e6e9ee;
-    color: var(--primary);
-  }
-
-
-  .hero .btn {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-  }
-  
-  
-  /* Card & Section Styling */
+  /* Card & Sections */
   .card {
     border-radius: 10px;
     background-color: var(--card-bg);
@@ -102,21 +99,64 @@
     color: var(--accent);
   }
   
-  /* Headings */
   h2.card-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* tab content */
+  #pubTab {
+    margin-bottom: 0 !important;
   }
   
-  /* Links */
-  a {
-    color: var(--primary);
-    text-decoration: none;
+  .tab-content {
+    margin-top: 0.25rem;
   }
   
-  a:hover {
-    text-decoration: underline;
+  
+  /* Timeline Items */
+  .timeline-item {
+    padding-top: 3rem;
+    border-top: 1px solid #ddd;
+    margin-top: 3rem;
+  }
+
+  .timeline-item:first-child {
+    padding-top: 1.0rem;
+    margin-top: 1.0rem;
+    border-top: none;
+  }
+  
+  .timeline-label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+  }
+
+  .timeline-item .card-body.bg-light {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+
+  
+  /* Project Image */
+  .project-img {
+    max-height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 3px;
+    background-color: #fff;
+    margin-left: 2rem;
+  }
+  
+  /* Abstract */
+  .timeline-item .col-md-8 p {
+    text-align: justify;
   }
   
   /* Buttons */
@@ -142,30 +182,7 @@
     color: #fff;
   }
   
-  /* Timeline Styling */
-  .timeline-item {
-    padding-top: 3rem;
-    border-top: 1px solid #ddd;
-    margin-top: 3rem;
-  }
-  
-  .timeline-label {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-  }
-  
-  /* Images */
-  .project-img {
-    max-height: 400px;
-    object-fit: contain;
-    width: 100%;
-    box-shadow: none;
-    border: none;
-  }
-  
-  /* Accordion Buttons */
+  /* Accordion */
   .accordion-button.bg-dark {
     background-color: var(--primary);
     color: #fff;
@@ -176,47 +193,25 @@
     background-color: var(--accent);
   }
   
-  /* Icon Color Fix */
   .accordion-button::after {
-    filter: brightness(0) invert(1); /* white arrow */
+    filter: brightness(0) invert(1);
   }
   
+/* Timeline Entry (Talks + Experience) */
+.timeline-entry {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
 
-  /* Refined Talks Section Styling */
-.talk-entry h5 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  
-  .talk-entry .talk-title {
-    color: #2c3e50;
-  }
-  
-  .talk-entry .talk-context {
-    color: #6c757d;
-    font-size: 0.9rem;
-  }
-  
-  .talk-entry {
-    border-left: 3px solid var(--primary);
-    padding-left: 1rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-  }
-  
-  .card-body h5 {
-    font-size: 1.1rem;
-    color: var(--accent);
-  }
-  
-  .card-body .text-muted {
-    font-size: 0.9rem;
-    margin-bottom: 0.3rem;
-  }
-  
-  
-  html {
-    scroll-behavior: smooth;
-  }
+.timeline-entry .title {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.timeline-entry .context {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
   

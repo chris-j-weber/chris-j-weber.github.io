@@ -1,0 +1,51 @@
+[
+    {
+      "title": "Drawing-In-Steps: Supporting Creative Goals through User Engagement via Hierarchical Image Generation",
+      "date": "June 2025",
+      "conference": "ACM IMX 2025 – Interactive Media Experiences",
+      "abstract": "This paper presents a structured, collaborative AI image generation workflow that emphasizes user control and creative authorship. A user study with 30 participants found that stepwise generation workflows increased artistic ownership, satisfaction, and alignment with personal vision compared to traditional text-to-image tools. Results suggest that balancing automation and control is key to meaningful human–AI co-creation in artistic contexts.",
+      "doi": "",
+      "link": "",
+      "img": "images/drispaper.png",
+      "additionalImages": ["images/dris.png"],
+      "tool": {
+        "title": "Drawing-In-Steps",
+        "description": "An interactive sketch refinement interface using diffusion, designed for step-wise visual control and creative input across stages like detailing, color, and finishing.",
+        "link": ""
+      },
+      "type": "first-author"
+    },
+    {
+      "title": "wr-AI-ter: Enhancing Ownership Perception in AI-Driven Script Writing",
+      "date": "June 2024",
+      "conference": "IMX '24: ACM International Conference on Interactive Media Experiences",
+      "abstract": "The paper presents wr-AI-ter, a collaborative scriptwriting tool that guides users through a four-stage process—Ideation, Structure, Refinement, and Export. It is designed to support users of varying expertise in maintaining creative ownership while leveraging AI assistance. A user study with 23 participants found that the tool accelerated the writing process and improved script quality without undermining the sense of authorship or narrative control.",
+      "doi": "https://doi.org/10.1145/3639701.3656325",
+      "link": "https://www.researchgate.net/publication/381272365_wr-AI-ter_Enhancing_Ownership_Perception_in_AI-Driven_Script_Writing",
+      "img": "images/wraiterpaper.png",
+      "additionalImages": ["images/wraiter.png"],
+      "tool": {
+        "title": "wr-AI-ter",
+        "description": "wr-AI-ter is an interactive scriptwriting assistant that enables human–AI collaboration while preserving creative intent. The interface guides users through structured development while keeping the author in control of tone, flow, and structure.",
+        "link": "https://kilab.hff-muc.de/wraiter/"
+      },
+      "type": "first-author"
+    },
+    {
+      "title": "Diffusion-Based Sound Synthesis in Music Production",
+      "date": "September 2024",
+      "conference": "FARM '24: 12th ACM SIGPLAN International Workshop on Functional Art, Music, Modelling, and Design",
+      "abstract": "This paper explores the usability of generative AI in music production through a digital instrument that incorporates diffusion-based sound synthesis. Using pretrained latent diffusion models, we enabled text-based sound generation and integrated it into a music production environment. The resulting interface allows both generation and detailed parameter manipulation. While current models show limitations in responsiveness and musical specificity, our findings indicate that the tool supports novel sound exploration and sonic creativity in production contexts.",
+      "doi": "https://doi.org/10.1145/3677996.3678289",
+      "link": "https://www.researchgate.net/publication/383663370_Diffusion-Based_Sound_Synthesis_in_Music_Production",
+      "img": "images/soundpaper.png",
+      "additionalImages": ["images/diffusion-sound.png"],
+      "tool": {
+        "title": "WaveGenSynth",
+        "description": "WaveGenSynth enables users to explore diffusion-based text-to-audio generation with real-time editing of synthesis parameters. The tool is designed for integration with DAW workflows and experimental music settings.",
+        "link": "https://github.com/suckrowPierre/WaveGenSynth"
+      },
+      "type": "co-author"
+    }
+  ]
+  
