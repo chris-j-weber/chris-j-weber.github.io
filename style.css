@@ -249,4 +249,28 @@
   font-size: 0.9rem;
 }
 
-  
+.collapse {
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--light-bg);
+  border-bottom: 2px solid var(--primary);
+  font-weight: 600;
+}
+
+.timeline-item .col-md-8 .d-flex {
+  margin-top: 0.75rem;
+}
+
+.toggle-btn {
+  font-weight: 500;
+  background-color: var(--secondary);
+  color: var(--accent);
+  border: 1px solid var(--primary);
+}
+
+.toggle-btn:hover {
+  background-color: var(--primary);
+  color: white;
+}
