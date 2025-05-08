@@ -45,10 +45,16 @@
         </div>
         <div class="col-md-8 text-center text-md-start">
           <h1 class="display-5 fw-bold text-white">Christoph J. Weber</h1>
-          <p class="lead text-white mb-3">
+          <p class="lead text-white mb-1">
             PhD Researcher in AI & Film at <strong>HFF Munich</strong> |
             PhD Candidate in HCI at <strong>LMU Munich</strong>
           </p>
+          <p class="text-white mb-3">
+            <small>
+              B.Sc. Computational Linguistics, LMU Munich | M.Sc. Computer Science, LMU Munich
+            </small>
+          </p>
+          
           <a href="http://www.linkedin.com/in/christoph-j-weber/" target="_blank" class="btn btn-primary bg-white text-primary border-white">
             Connect on LinkedIn
           </a>
@@ -65,6 +71,11 @@
         
         <ul class="nav nav-tabs mb-0" id="pubTab" role="tablist">
           <li class="nav-item" role="presentation">
+            <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-authors" type="button" role="tab">
+              All
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
             <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first-author" type="button" role="tab">
               First Author
             </button>
@@ -76,8 +87,13 @@
           </li>
         </ul>
         
-  
         <div class="tab-content">
+          <!-- All-Authors Publications Accordion -->
+          <div class="tab-pane fade" id="all-authors" role="tabpanel" aria-labelledby="all-tab">
+            <div class="accordion" id="accordionAllAuthor">
+              <!-- First-author publications will be injected here -->
+            </div>
+          </div>
           <!-- First-Author Publications Accordion -->
           <div class="tab-pane fade show active" id="first-author" role="tabpanel">
             <div class="accordion" id="accordionFirstAuthor">

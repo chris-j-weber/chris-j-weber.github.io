@@ -1,10 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
- // Helper to create one publication block with image + optional toggle
-const createPublicationBlock = (pub, index, total) => {
+  // Helper to create one publication block with image + optional toggle
+  const createPublicationBlock = (pub, index, total) => {
     const idSuffix = `${pub.type.replace("-", "")}${index}`;
+    const typeBadge = pub.type === "first-author"
+      ? '<span class="badge bg-primary ms-2">First Author</span>'
+      : '<span class="badge bg-secondary ms-2">Co-Author</span>';
+
     return `
       <div class="timeline-item mb-4 ${index === 0 ? 'pt-3 mt-3' : ''}">
-        <div class="timeline-label mb-2 fw-semibold">${pub.date} – ${pub.title}</div>
+        <div class="timeline-label mb-2 fw-semibold">${pub.date} – ${pub.title} ${typeBadge}</div>
         <div class="row g-4 align-items-center">
           <div class="col-md-4">
             <img src="${pub.img}" class="img-fluid project-img-main" alt="${pub.title}">
@@ -24,7 +28,7 @@ const createPublicationBlock = (pub, index, total) => {
             </div>
           </div>
         </div>
-  
+
         ${pub.additionalImages ? `
           <div class="collapse mt-3" id="details-${idSuffix}">
             <div class="card card-body bg-light">
@@ -41,38 +45,45 @@ const createPublicationBlock = (pub, index, total) => {
       </div>
     `;
   };
-  
-    // Load publications
-    fetch("publications.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const firstAuthorContainer = document.getElementById("accordionFirstAuthor");
-        const coAuthorContainer = document.getElementById("accordionCoAuthor");
-        
-  
-        const firstPubs = data.filter(p => p.type === "first-author");
-        const coPubs = data.filter(p => p.type === "co-author");
-  
-        firstPubs.forEach((pub, i) => {
-          firstAuthorContainer.innerHTML += createPublicationBlock(pub, i, firstPubs.length);
-        });
-  
-        coPubs.forEach((pub, i) => {
-          coAuthorContainer.innerHTML += createPublicationBlock(pub, i, coPubs.length);
-        });
-  
-        // Add toggle functionality
-        document.querySelectorAll(".toggle-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            setTimeout(() => {
-              const target = document.getElementById(btn.getAttribute("data-bs-target").replace("#", ""));
-              const expanded = target.classList.contains("show");
-              btn.innerHTML = expanded ? "🔼 Hide Info" : "🔽 More Info";
-            }, 350);
-          });
+
+  // Load publications
+  fetch("publications.json")
+    .then((response) => response.json())
+    .then((data) => {
+      const firstAuthorContainer = document.getElementById("accordionFirstAuthor");
+      const coAuthorContainer = document.getElementById("accordionCoAuthor");
+      const allAuthorContainer = document.getElementById("accordionAllAuthor");
+
+      // Sortierte Subsets
+      const firstPubs = data.filter(p => p.type === "first-author").sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+      const coPubs = data.filter(p => p.type === "co-author").sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+      const allPubs = [...data].sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+
+      firstPubs.forEach((pub, i) => {
+        firstAuthorContainer.innerHTML += createPublicationBlock(pub, i, firstPubs.length);
+      });
+
+      coPubs.forEach((pub, i) => {
+        coAuthorContainer.innerHTML += createPublicationBlock(pub, i, coPubs.length);
+      });
+
+      allPubs.forEach((pub, i) => {
+        allAuthorContainer.innerHTML += createPublicationBlock(pub, i, allPubs.length);
+      });
+
+      // Add toggle functionality
+      document.querySelectorAll(".toggle-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          setTimeout(() => {
+            const target = document.getElementById(btn.getAttribute("data-bs-target").replace("#", ""));
+            const expanded = target.classList.contains("show");
+            btn.innerHTML = expanded ? "🔼 Hide Info" : "🔽 More Info";
+          }, 350);
         });
       });
-  });
+    });
+});
+
   
 // Load talks
 fetch("talks.json")
@@ -84,7 +95,7 @@ fetch("talks.json")
       talkDiv.classList.add("timeline-entry", "mb-4");  // changed from talk-entry
       talkDiv.innerHTML = `
         <h5 class="title">
-          ${talk.link ? `<a href="${talk.link}" target="_blank"><em>${talk.title}</em></a>` : `<em>${talk.title}</em>`}
+          ${talk.link ? `<a href="${talk.link}" target="_blank">${talk.title}</a>` : `${talk.title}`}
         </h5>
         <div class="context">${talk.location} · ${talk.date}</div>
         <p>${talk.description}</p>
