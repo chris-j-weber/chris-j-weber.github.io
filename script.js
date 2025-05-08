@@ -5,46 +5,57 @@ document.addEventListener("DOMContentLoaded", () => {
     const typeBadge = pub.type === "first-author"
       ? '<span class="badge bg-primary ms-2">First Author</span>'
       : '<span class="badge bg-secondary ms-2">Co-Author</span>';
-
+  
     return `
       <div class="timeline-item mb-4 ${index === 0 ? 'pt-3 mt-3' : ''}">
-        <div class="timeline-label mb-2 fw-semibold">${pub.date} – ${pub.title} ${typeBadge}</div>
-        <div class="row g-4 align-items-center">
-          <div class="col-md-4">
-            <img src="${pub.img}" class="img-fluid project-img-main" alt="${pub.title}">
-          </div>
-          <div class="col-md-8">
-            <p><strong>Publication:</strong> <em>${pub.title}</em><br>
-            ${pub.conference ? `<span class="text-muted">${pub.conference}</span><br>` : ""}
-            ${pub.doi ? `DOI: <a href="${pub.doi}" target="_blank">${pub.doi}</a>` : ""}</p>
-            <p><strong>Abstract:</strong> ${pub.abstract}</p>
-            <div class="d-flex gap-2 flex-wrap">
-              ${pub.additionalImages ? `
-                <button class="btn btn-outline-primary toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#details-${idSuffix}" aria-expanded="false" aria-controls="details-${idSuffix}">
-                  🔽 More Info
-                </button>` : ""}
-              ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary" target="_blank">📄 Read Paper</a>` : ""}
-              ${pub.tool?.link ? `<a href="${pub.tool.link}" class="btn btn-outline-primary" target="_blank">🔗 Tool Page</a>` : ""}
+        <div class="timeline-label mb-2 fw-semibold">${pub.title}</div>
+
+        <div class="publication-textbox">
+
+          <div class="row g-4 align-items-start">
+            <div class="col-md-4">
+              <img src="${pub.img}" class="img-fluid project-img-main" alt="${pub.title}">
+            </div>
+            <div class="col-md-8 publication-details">
+              <div class="publication-textbox">
+                <p class="mb-1"><strong>Publication:</strong> <em>${pub.title}</em></p>
+                ${pub.authors ? `<p class="mb-1"><strong>Authors:</strong> ${pub.authors}</p>` : ""}
+                ${pub.conference ? `<p class="mb-1 text-muted">${pub.conference}</p>` : ""}
+                ${pub.doi ? `<p class="mb-1"><strong>DOI:</strong> <a href="${pub.doi}" target="_blank">${pub.doi}</a></p>` : ""}
+                ${pub.published ? `<p class="mb-2"><strong>Published:</strong> ${pub.published}</p>` : `<p class="mb-2"><strong>Published:</strong> ${pub.date}</p>`}
+                <p><strong>Abstract:</strong> ${pub.abstract}</p>
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                  ${(pub.additionalImages?.length || 0) > 0 || pub.tool?.description
+                    ? `<button class="btn btn-outline-primary toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#details-${idSuffix}" aria-expanded="false" aria-controls="details-${idSuffix}">🔽 More Info</button>`
+                    : ""}
+                  ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary" target="_blank">📄 Read Paper</a>` : ""}
+                  ${pub.tool?.link ? `<a href="${pub.tool.link}" class="btn btn-outline-primary" target="_blank">🔗 Tool Page</a>` : ""}
+                </div>
+              </div>
             </div>
           </div>
+    
+          ${pub.additionalImages ? `
+            <div class="collapse mt-3" id="details-${idSuffix}">
+              <div class="card card-body bg-light">
+                <div class="row g-3">
+                  ${pub.additionalImages.map(img => `
+                    <div class="col-md-4">
+                      <img src="${img}" class="img-fluid project-img-extra" alt="Additional image">
+                    </div>`).join("")}
+                </div>
+                ${pub.tool ? `<p class="mt-3"><strong>Tool:</strong> ${pub.tool.description}</p>` : ""}
+              </div>
+            </div>
+          ` : ""}
+
         </div>
 
-        ${pub.additionalImages ? `
-          <div class="collapse mt-3" id="details-${idSuffix}">
-            <div class="card card-body bg-light">
-              <div class="row g-3">
-                ${pub.additionalImages.map(img => `
-                  <div class="col-md-4">
-                    <img src="${img}" class="img-fluid project-img-extra" alt="Additional image">
-                  </div>`).join("")}
-              </div>
-              ${pub.tool ? `<p class="mt-3"><strong>Tool:</strong> ${pub.tool.description}</p>` : ""}
-            </div>
-          </div>
-        ` : ""}
+
       </div>
     `;
   };
+  
 
   // Load publications
   fetch("publications.json")

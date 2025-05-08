@@ -180,13 +180,27 @@
   
 
   /* Textspalte Abstand */
-  @media (min-width: 768px) {
-    .timeline-item .col-md-8 {
-      padding-left: 1.5rem;
-      padding-right: 2rem;
-    }
-  }
 
+
+  .publication-textbox {
+    margin-top: 2rem; /* Abstand nach oben */
+    border-radius: 0.5rem;
+  }
+  
+  .publication-details {
+    display: flex;
+    justify-content: center;
+    padding-right: 2rem;
+  }
+  
+  .publication-details > .inner {
+    max-width: 640px;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem 0;
+  }
+  
+  
   
   
   /* Abstract */
