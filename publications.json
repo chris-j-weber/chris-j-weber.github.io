@@ -9,7 +9,7 @@
       "doi": "",
       "link": "",
       "img": "images/drispaper.png",
-      "additionalImages": ["images/dris.png"],
+      "additionalImages": ["images/dris(1).png","images/dris(2).jpg","images/dris(3).png","images/dris(4).png"],
       "tool": {
         "title": "Drawing-In-Steps",
         "description": "An interactive sketch refinement interface using diffusion, designed for step-wise visual control and creative input across stages like detailing, color, and finishing.",
@@ -84,7 +84,7 @@
       "doi": "https://doi.org/10.1145/3639701.3656325",
       "link": "https://www.researchgate.net/publication/381272365_wr-AI-ter_Enhancing_Ownership_Perception_in_AI-Driven_Script_Writing",
       "img": "images/wraiterpaper.png",
-      "additionalImages": ["images/wraiter.png"],
+      "additionalImages": ["images/wraiter(1).png","images/wraiter(2).png","images/wraiter(3).png","images/wraiter(4).png","images/wraiter(5).png","images/wraiter(6).png"],
       "abstract": "The paper presents wr-AI-ter, a collaborative scriptwriting tool that guides users through a four-stage process—Ideation, Structure, Refinement, and Export. It is designed to support users of varying expertise in maintaining creative ownership while leveraging AI assistance. A user study with 23 participants found that the tool accelerated the writing process and improved script quality without undermining the sense of authorship or narrative control.",
       "tool": {
         "title": "wr-AI-ter",
