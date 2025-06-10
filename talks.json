@@ -1,6 +1,11 @@
-[
+[   {
+      "title": "Guest lecture in media technology",
+      "location": "LMU, Munich",
+      "date": "2025",
+      "description": "Invited guest talk discussing AI integration into contemporary film production workflows and tools."
+    },
     {
-      "title": "AICA Project Workshop – AI in Culture & Arts",
+      "title": "AICA Project Workshop 2025 – AI in Culture & Arts",
       "link": "https://aica-wavelab.github.io/project-workshop/",
       "location": "WaveLab, Munich",
       "date": "2025",
@@ -14,7 +19,7 @@
       "description": "Invited guest talk discussing AI integration into contemporary film production workflows and tools."
     },
     {
-      "title": "KI Schwerpunkt Seminar",
+      "title": "AI Focus Seminar",
       "location": "HFF Munich",
       "date": "2024, 2023, 2022",
       "description": "Core seminar exploring AI applications in film and media, including generative tools, authorship, and creative process design."
@@ -26,7 +31,7 @@
       "description": "Hands-on technical workshop on generative VFX and diffusion-based tools in visual storytelling."
     },
     {
-      "title": "KI Symposium",
+      "title": "AI Symposium",
       "location": "HFF Munich",
       "date": "2022",
       "description": "Short intro talk summarizing key developments in creative AI, based on presentations at ECCV 2022."

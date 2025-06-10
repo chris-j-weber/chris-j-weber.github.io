@@ -5,10 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const typeBadge = pub.type === "first-author"
       ? '<span class="badge bg-primary ms-2">First Author</span>'
       : '<span class="badge bg-secondary ms-2">Co-Author</span>';
+    
+    const awardBadge = pub.bestPaperAward
+      ? '<span class="badge bg-warning text-dark ms-2">🏆 Best Paper Award</span>'
+      : '';
+
   
     return `
       <div class="timeline-item mb-4 ${index === 0 ? 'pt-3 mt-3' : ''}">
-        <div class="timeline-label mb-2 fw-semibold">${pub.title}</div>
+        <div class="timeline-label mb-2 fw-semibold">
+          ${pub.title} ${awardBadge}
+        </div>
 
         <div class="publication-textbox">
 
@@ -18,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <div class="col-md-8 publication-details">
               <div class="publication-textbox">
-                <p class="mb-1"><strong>Publication:</strong> <em>${pub.title}</em></p>
                 ${pub.authors ? `<p class="mb-1"><strong>Authors:</strong> ${pub.authors}</p>` : ""}
                 ${pub.conference ? `<p class="mb-1 text-muted">${pub.conference}</p>` : ""}
                 ${pub.doi ? `<p class="mb-1"><strong>DOI:</strong> <a href="${pub.doi}" target="_blank">${pub.doi}</a></p>` : ""}
