@@ -335,4 +335,10 @@
   transition: transform 0.3s ease;
   display: inline-block;
   width: 1em;
+  color: #4d8eff; /* gleiche Farbe wie deine .dot.filled */
+  transition: transform 0.2s ease;
+}
+
+.collapse-icon.rotate {
+  transform: rotate(90deg);
 }
