@@ -1,0 +1,85 @@
+[
+  {
+    "category": "Programming Languages",
+    "level": 4,
+    "skills": [
+      { "name": "Python", "level": 5 },
+      { "name": "JavaScript", "level": 4 },
+      { "name": "Java / JavaFX", "level": 3 },
+      { "name": "HTML", "level": 4 },
+      { "name": "C#", "level": 3 },
+      { "name": "R", "level": 3 },
+      { "name": "Perl", "level": 2 }
+    ]
+  },
+  {
+    "category": "Data Science & ML",
+    "level": 4,
+    "skills": [
+      { "name": "TensorFlow", "level": 4 },
+      { "name": "Keras", "level": 4 },
+      { "name": "scikit-learn", "level": 4 },
+      { "name": "PyTorch", "level": 3 },
+      { "name": "Torch Lightning", "level": 3 },
+      { "name": "SciPy", "level": 3 },
+      { "name": "XGBoost", "level": 3 },
+      { "name": "Pandas", "level": 3 },
+      { "name": "SQL", "level": 1 }
+    ]
+  },
+  {
+    "category": "Natural Language Processing",
+    "level": 4,
+    "skills": [
+      { "name": "BERT", "level": 4 },
+      { "name": "NLTK", "level": 3 },
+      { "name": "StanfordNLP", "level": 3 },
+      { "name": "SpaCy", "level": 3 }
+    ]
+  },
+  {
+    "category": "LLMs & Generative AI",
+    "level": 4,
+    "skills": [
+      { "name": "Transformers (HuggingFace)", "level": 4 },
+      { "name": "HuggingFace Hub (Upload / Hosting)", "level": 3 },
+      { "name": "Few-shot / Zero-shot Prompting", "level": 3 },
+      { "name": "Prompt Engineering", "level": 3 },
+      { "name": "OpenAI / Claude APIs", "level": 4 },
+      { "name": "LangChain", "level": 3 }
+    ]
+  },
+  {
+    "category": "HCI & UX Research",
+    "level": 4,
+    "skills": [
+      { "name": "User Studies (Design & Evaluation)", "level": 4 },
+      { "name": "Interaction Design", "level": 3 },
+      { "name": "Usability Testing", "level": 3 },
+      { "name": "Think-Aloud / Cognitive Walkthroughs", "level": 3 },
+      { "name": "Figma / Prototyping Tools", "level": 2 }
+    ]
+  },
+  {
+    "category": "Deployment & Tooling",
+    "level": 4,
+    "skills": [
+      { "name": "FastAPI", "level": 3 },
+      { "name": "Flask", "level": 3 },
+      { "name": "Jupyter Notebooks", "level": 5 },
+      { "name": "Docker", "level": 4 },
+      { "name": "Git", "level": 5 },
+      { "name": "Bash (Shell)", "level": 4 },
+      { "name": "SLURM", "level": 3 }
+    ]
+  },
+  {
+    "category": "Creative Media & Signal Processing",
+    "level": 3,
+    "skills": [
+      { "name": "OpenCV", "level": 3 },
+      { "name": "librosa", "level": 3 },
+      { "name": "Unity", "level": 3 }
+    ]
+  }
+]

@@ -288,3 +288,51 @@
   background-color: var(--primary);
   color: white;
 }
+
+
+.skill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.skill-name {
+  max-width: 70%;
+  font-size: 0.95rem;
+}
+
+.skill-dots {
+  display: flex; /* <<< FEHLTE */
+  gap: 0.25rem;
+}
+
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.dot.filled {
+  background-color: var(--primary);
+}
+
+.category-header {
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border-top: 1px solid #eee;
+}
+
+.category-header:hover {
+  background-color: #f8f9fa;
+}
+
+.collapse-icon {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  width: 1em;
+}

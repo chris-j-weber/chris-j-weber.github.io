@@ -148,5 +148,74 @@ fetch("experience.json")
     });
   });
 
-  
-  
+fetch("skills.json")
+  .then(response => response.json())
+  .then(data => {
+    const container = document.getElementById("skills-container");
+    if (!container) return;
+
+    data.forEach((cat, index) => {
+      const catLevel = cat.level ?? 0;
+      const avgDots = Array.from({ length: 5 }, (_, i) => {
+        const filled = i < catLevel ? "dot filled" : "dot";
+        return `<span class="${filled}"></span>`;
+      }).join("");
+
+      const collapseId = `skills-collapse-${index}`;
+      const iconId = `icon-${index}`;
+
+      const catWrapper = document.createElement("div");
+      catWrapper.classList.add("mb-3");
+
+      // Skill-Gruppierung nach Level, dann alphabetisch (absteigend) sortiert
+      const groupedSkills = cat.skills
+        .reduce((groups, skill) => {
+          if (!groups[skill.level]) groups[skill.level] = [];
+          groups[skill.level].push(skill.name);
+          return groups;
+        }, {});
+
+      const sortedSkillBlocks = Object.entries(groupedSkills)
+        .sort((a, b) => b[0] - a[0]) // Level absteigend
+        .map(([level, names]) => {
+          names.sort((a, b) => b.localeCompare(a)); // Alphabetisch absteigend
+
+          const dots = Array.from({ length: 5 }, (_, i) => {
+            const filled = i < level ? "dot filled" : "dot";
+            return `<span class="${filled}"></span>`;
+          }).join("");
+
+          return `
+            <div class="skill-row d-flex justify-content-between align-items-center mb-2 ps-5">
+              <span class="skill-name">${names.join(", ")}</span>
+              <span class="skill-dots d-flex">${dots}</span>
+            </div>
+          `;
+        }).join("");
+
+      catWrapper.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center category-header" role="button"
+             data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false"
+             aria-controls="${collapseId}" onclick="toggleIcon('${iconId}')">
+          <div class="d-flex align-items-center gap-2">
+            <span id="${iconId}" class="collapse-icon">▸</span>
+            <h5 class="fw-semibold mb-0">${cat.category}</h5>
+          </div>
+          <div class="skill-dots d-flex">${avgDots}</div>
+        </div>
+
+        <div class="collapse mt-2" id="${collapseId}">
+          ${sortedSkillBlocks}
+        </div>
+      `;
+
+      container.appendChild(catWrapper);
+    });
+  });
+
+// Umschaltfunktion für ▸ / ▾
+window.toggleIcon = function(id) {
+  const icon = document.getElementById(id);
+  if (!icon) return;
+  icon.textContent = icon.textContent === "▸" ? "▾" : "▸";
+};
