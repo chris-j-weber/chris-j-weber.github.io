@@ -342,3 +342,13 @@
 .collapse-icon.rotate {
   transform: rotate(90deg);
 }
+
+.publication-header {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.publication-header:hover {
+  background-color: #f8f9fa;
+}
