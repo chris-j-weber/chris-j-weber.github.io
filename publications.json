@@ -1,5 +1,20 @@
 [
     {
+      "title": "Evaluating Diffusion-Based Image Generation for Easy Language Accessibility",
+      "authors": "Christoph Johannes, Dominik Beyer, Sylvia Rothe",
+      "date": "July 2025",
+      "sortDate": "2025-07",
+      "published": "06 July 2025",
+      "conference": "AIMEDIA 2025: The First International Conference on AI-based Media Innovation",
+      "pages": "32–40",
+      "isbn": "978-1-68558-330-9",
+      "location": "Venice, Italy",
+      "abstract": "Easy Language is a linguistic resource designed to facilitate comprehension for individuals with learning impairments and non-native speakers... (Abstract gekürzt für Übersichtlichkeit).",
+      "link": "https://www.thinkmind.org/library/AIMEDIA/AIMEDIA_2025/aimedia_2025_1_60_40041.html",
+      "img": "images/easylangpaper.png", 
+      "type": "first-author"
+    },
+    {
       "title": "Drawing-In-Steps: Supporting Creative Goals through User Engagement via Hierarchical Image Generation",
       "authors": "Christoph J. Weber, Jenny Huang, Sylvia Rothe",
       "date": "June 2025",
@@ -8,7 +23,7 @@
       "conference": "IMX '25: Proceedings of the 2025 ACM International Conference on Interactive Media Experiences",
       "abstract": "This paper presents a structured, collaborative AI image generation workflow that emphasizes user control and creative authorship. A user study with 30 participants found that stepwise generation workflows increased artistic ownership, satisfaction, and alignment with personal vision compared to traditional text-to-image tools. Results suggest that balancing automation and control is key to meaningful human–AI co-creation in artistic contexts.",
       "doi": "https://doi.org/10.1145/3706370.3727862",
-      "link": "",
+      "link": "https://www.researchgate.net/publication/392275049_Drawing-in-Steps_Supporting_Creative_Goals_through_User_Engagement_via_Hierarchical_Image_Generation",
       "img": "images/drispaper.png",
       "additionalImages": ["images/dris(1).png","images/dris(2).jpg","images/dris(3).png","images/dris(4).png"],
       "tool": {
@@ -27,7 +42,7 @@
       "conference": "IMX '25: Proceedings of the 2025 ACM International Conference on Interactive Media Experiences",
       "abstract": "This paper presents a structured, collaborative AI image generation workflow that emphasizes user control and creative authorship. A user study with 30 participants found that stepwise generation workflows increased artistic ownership, satisfaction, and alignment with personal vision compared to traditional text-to-image tools. Results suggest that balancing automation and control is key to meaningful human–AI co-creation in artistic contexts.",
       "doi": "https://doi.org/10.1145/3706370.3727869",
-      "link": "",
+      "link": "https://www.researchgate.net/publication/392272709_An_AI-driven_Music_Visualization_System_for_Generating_Meaningful_Audio-Responsive_Visuals_in_Real-Time",
       "img": "images/musicvispaper.png",
       "additionalImages": [],
       "bestPaperAward": true,
@@ -51,7 +66,7 @@
       "img": "images/vppaper.png",
       "additionalImages": [],
       "tool": {
-        "title": "",
+        "title": "https://www.researchgate.net/publication/392273743_Understanding_Creative_Potential_and_Use_Cases_of_AI-Generated_Environments_for_Virtual_Film_Productions_Insights_from_Industry_Professionals",
         "description": "",
         "link": ""
       },
