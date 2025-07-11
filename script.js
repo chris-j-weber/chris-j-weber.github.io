@@ -1,66 +1,53 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Helper to create one publication block with image + optional toggle
-  const createPublicationBlock = (pub, index, total) => {
+  const createPublicationBlock = (pub, index) => {
     const idSuffix = `${pub.type.replace("-", "")}${index}`;
-    const typeBadge = pub.type === "first-author"
-      ? '<span class="badge bg-primary ms-2">First Author</span>'
-      : '<span class="badge bg-secondary ms-2">Co-Author</span>';
-    
     const awardBadge = pub.bestPaperAward
       ? '<span class="badge bg-warning text-dark ms-2">🏆 Best Paper Award</span>'
       : '';
 
-  
-    return `
-      <div class="timeline-item mb-4 ${index === 0 ? 'pt-3 mt-3' : ''}">
-        <div class="timeline-label mb-2 fw-semibold">
-          ${pub.title} ${awardBadge}
+    const collapsedHeader = `
+      <div class="d-flex align-items-start publication-header collapsed"
+          data-bs-toggle="collapse" data-bs-target="#details-${idSuffix}" 
+          aria-expanded="false" aria-controls="details-${idSuffix}">
+        <span class="collapse-icon mt-1">▸</span>
+        <div class="ms-2">
+          <span class="fw-semibold">${pub.title}</span> ${awardBadge}
+          <div class="text-muted small mt-1">${pub.published || pub.date} • ${pub.category || "Article"}</div>
         </div>
+      </div>
+    `;
 
-        <div class="publication-textbox">
-
-          <div class="row g-4 align-items-start">
-            <div class="col-md-4">
-              <img src="${pub.img}" class="img-fluid project-img-main" alt="${pub.title}">
-            </div>
-            <div class="col-md-8 publication-details">
-              <div class="publication-textbox">
-                ${pub.authors ? `<p class="mb-1"><strong>Authors:</strong> ${pub.authors}</p>` : ""}
-                ${pub.conference ? `<p class="mb-1 text-muted">${pub.conference}</p>` : ""}
-                ${pub.doi ? `<p class="mb-1"><strong>DOI:</strong> <a href="${pub.doi}" target="_blank">${pub.doi}</a></p>` : ""}
-                ${pub.published ? `<p class="mb-2"><strong>Published:</strong> ${pub.published}</p>` : `<p class="mb-2"><strong>Published:</strong> ${pub.date}</p>`}
-                <p><strong>Abstract:</strong> ${pub.abstract}</p>
-                <div class="d-flex gap-2 flex-wrap mt-3">
-                  ${(pub.additionalImages?.length || 0) > 0 || pub.tool?.description
-                    ? `<button class="btn btn-outline-primary toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#details-${idSuffix}" aria-expanded="false" aria-controls="details-${idSuffix}">🔽 More Info</button>`
-                    : ""}
-                  ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary" target="_blank">📄 Read Paper</a>` : ""}
-                  ${pub.tool?.link ? `<a href="${pub.tool.link}" class="btn btn-outline-primary" target="_blank">🔗 Tool Page</a>` : ""}
-                </div>
+    const expandedContent = `
+      <div class="collapse mt-3" id="details-${idSuffix}">
+        <div class="ms-4">
+          <div class="row g-3 align-items-start">
+            <div class="col-md-8">
+              ${pub.journal ? `<p class="mb-1"><strong>Journal:</strong> ${pub.journal}</p>` : ""}
+              ${pub.conference ? `<p class="mb-1"><strong>Conference:</strong> ${pub.conference}</p>` : ""}
+              ${pub.abstract ? `<p class="mb-2"><strong>Abstract:</strong> ${pub.abstract}</p>` : ""}
+              <div class="d-flex gap-2 flex-wrap">
+                ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary btn-sm" target="_blank">📄 PDF</a>` : ""}
+                ${pub.doi ? `<a href="${pub.doi}" class="btn btn-outline-primary btn-sm" target="_blank">DOI</a>` : ""}
               </div>
+            </div>
+            <div class="col-md-4">
+              ${pub.img ? `<img src="${pub.img}" class="img-fluid project-img-main" alt="${pub.title}">` : ""}
             </div>
           </div>
-    
-          ${pub.additionalImages ? `
-            <div class="collapse mt-3" id="details-${idSuffix}">
-              <div class="card card-body bg-light">
-                <div class="row g-3">
-                  ${pub.additionalImages.map(img => `
-                    <div class="col-md-4">
-                      <img src="${img}" class="img-fluid project-img-extra" alt="Additional image">
-                    </div>`).join("")}
-                </div>
-                ${pub.tool ? `<p class="mt-3"><strong>Tool:</strong> ${pub.tool.description}</p>` : ""}
-              </div>
-            </div>
-          ` : ""}
-
         </div>
+      </div>
+    `;
 
 
+    return `
+      <div class="publication-entry border-top pt-3 mt-3">
+        ${collapsedHeader}
+        ${expandedContent}
       </div>
     `;
   };
+
   
 
   // Load publications
@@ -86,6 +73,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
       allPubs.forEach((pub, i) => {
         allAuthorContainer.innerHTML += createPublicationBlock(pub, i, allPubs.length);
+      });
+
+
+      document.querySelectorAll('.publication-header').forEach(header => {
+        const icon = header.querySelector('.collapse-icon');
+        const collapseId = header.getAttribute('data-bs-target');
+
+        const collapseEl = document.querySelector(collapseId);
+        if (!collapseEl) return;
+
+        collapseEl.addEventListener('show.bs.collapse', () => {
+          icon.classList.add('rotate');
+        });
+        collapseEl.addEventListener('hide.bs.collapse', () => {
+          icon.classList.remove('rotate');
+        });
       });
 
       // Add toggle functionality
@@ -219,3 +222,7 @@ window.toggleIcon = function(id) {
   if (!icon) return;
   icon.textContent = icon.textContent === "▸" ? "▾" : "▸";
 };
+
+
+
+

@@ -157,7 +157,7 @@
   /* Project Image */
   .project-img-main {
     width: 100%;
-    max-width: 300px;
+    max-width: 150px;
     height: auto;
     aspect-ratio: 3 / 4;
     object-fit: contain;
