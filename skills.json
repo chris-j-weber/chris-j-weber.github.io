@@ -1,85 +1,107 @@
 [
   {
-    "category": "Programming Languages",
+    "category": "Programming & Scripting Languages",
     "level": 4,
     "skills": [
       { "name": "Python", "level": 5 },
       { "name": "JavaScript", "level": 4 },
-      { "name": "Java / JavaFX", "level": 3 },
       { "name": "HTML", "level": 4 },
-      { "name": "C#", "level": 3 },
-      { "name": "R", "level": 3 },
-      { "name": "Perl", "level": 2 }
+      { "name": "C#", "level": 3 }
     ]
   },
   {
-    "category": "Data Science & ML",
-    "level": 4,
+    "category": "Data Science & Machine Learning",
+    "level": 5,
     "skills": [
+      { "name": "Supervised Machine Learning (Regression, Classification)", "level": 5 },
+      { "name": "Unsupervised Machine Learning (Clustering)", "level": 5 },
+      { "name": "Deep Learning (RNN, LSTM, CNN, Transformer)", "level": 4 },
+      { "name": "Reinforcement Learning", "level": 3 },
+      { "name": "Stochastic Models (Hidden Markov Models & Forward-Backward)", "level": 5 },
+      
+      { "name": "scikit-learn", "level": 4 },
+      { "name": "Pandas", "level": 3 },
+      { "name": "SciPy", "level": 3 },
       { "name": "TensorFlow", "level": 4 },
       { "name": "Keras", "level": 4 },
-      { "name": "scikit-learn", "level": 4 },
       { "name": "PyTorch", "level": 3 },
-      { "name": "Torch Lightning", "level": 3 },
-      { "name": "SciPy", "level": 3 },
-      { "name": "XGBoost", "level": 3 },
-      { "name": "Pandas", "level": 3 },
-      { "name": "SQL", "level": 1 }
+      { "name": "Torch Lightning", "level": 3 }
     ]
   },
   {
-    "category": "Natural Language Processing",
-    "level": 4,
+    "category": "Natural Language & Speech Processing",
+    "level": 5,
     "skills": [
       { "name": "BERT", "level": 4 },
-      { "name": "NLTK", "level": 3 },
-      { "name": "StanfordNLP", "level": 3 },
-      { "name": "SpaCy", "level": 3 }
+      { "name": "NLTK", "level": 5 },
+      { "name": "StanfordNLP", "level": 4 },
+      { "name": "Whisper (Speech-to-Text)", "level": 5 },
+      { "name": "torchaudio", "level": 4 },
+      { "name": "wav2vec2 (Fairseq)", "level": 4 },
+      { "name": "librosa", "level": 4 }
     ]
   },
   {
-    "category": "LLMs & Generative AI",
+    "category": "Generative AI & LLMs",
     "level": 4,
     "skills": [
       { "name": "Transformers (HuggingFace)", "level": 4 },
       { "name": "HuggingFace Hub (Upload / Hosting)", "level": 3 },
-      { "name": "Few-shot / Zero-shot Prompting", "level": 3 },
       { "name": "Prompt Engineering", "level": 3 },
-      { "name": "OpenAI / Claude APIs", "level": 4 },
-      { "name": "LangChain", "level": 3 }
+      { "name": "Few-shot / Zero-shot Prompting", "level": 3 },
+      { "name": "OpenAI / Claude APIs", "level": 4 }
     ]
   },
   {
     "category": "HCI & UX Research",
-    "level": 4,
+    "level": 3,
     "skills": [
       { "name": "User Studies (Design & Evaluation)", "level": 4 },
       { "name": "Interaction Design", "level": 3 },
       { "name": "Usability Testing", "level": 3 },
-      { "name": "Think-Aloud / Cognitive Walkthroughs", "level": 3 },
-      { "name": "Figma / Prototyping Tools", "level": 2 }
+      { "name": "Figma / Prototyping Tools", "level": 3 }
     ]
   },
   {
-    "category": "Deployment & Tooling",
+    "category": "Tooling, Deployment & DevOps",
     "level": 4,
     "skills": [
-      { "name": "FastAPI", "level": 3 },
-      { "name": "Flask", "level": 3 },
       { "name": "Jupyter Notebooks", "level": 5 },
+      { "name": "Flask", "level": 4 },
+      { "name": "FastAPI", "level": 3 },
       { "name": "Docker", "level": 4 },
       { "name": "Git", "level": 5 },
       { "name": "Bash (Shell)", "level": 4 },
-      { "name": "SLURM", "level": 3 }
+      { "name": "SLURM", "level": 3 },
+      { "name": "Telegram Bot Development", "level": 4 }
     ]
   },
   {
-    "category": "Creative Media & Signal Processing",
+    "category": "Data & Databases",
+    "level": 2,
+    "skills": [
+      { "name": "SQL", "level": 1 }
+    ]
+  },
+  {
+    "category": "Creative Tech & Signal Processing",
     "level": 3,
     "skills": [
       { "name": "OpenCV", "level": 3 },
-      { "name": "librosa", "level": 3 },
-      { "name": "Unity", "level": 3 }
+      { "name": "Unity", "level": 3 },
+      { "name": "Unity ML-Agents", "level": 3 },
+      { "name": "Tkinter", "level": 3 },
+      { "name": "Flet", "level": 3 }
+    ]
+  },
+  {
+    "category": "Legacy & Background Tools",
+    "level": 2,
+    "skills": [
+      { "name": "Java / JavaFX", "level": 3 },
+      { "name": "R", "level": 2 },
+      { "name": "Perl", "level": 2 },
+      { "name": "CMU Sphinx", "level": 4 }
     ]
   }
 ]
