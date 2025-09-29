@@ -47,9 +47,20 @@
     "skills": [
       { "name": "Transformers (HuggingFace)", "level": 4 },
       { "name": "HuggingFace Hub (Upload / Hosting)", "level": 3 },
-      { "name": "Prompt Engineering", "level": 3 },
-      { "name": "Few-shot / Zero-shot Prompting", "level": 3 },
-      { "name": "OpenAI / Claude APIs", "level": 4 }
+      { "name": "Prompt Engineering", "level": 4 },
+      { "name": "Few-shot / Zero-shot Prompting", "level": 4 },
+      { "name": "OpenAI / Claude APIs", "level": 4 },
+      { "name": "Ollama", "level": 5 },
+      { "name": "RAG Systems (Vector Databases, Retrieval-Augmented Generation)", "level": 4 }
+    ]
+  },
+  {
+    "category": "Data Engineering",
+    "level": 4,
+    "skills": [
+      { "name": "Docker (Containerization & Deployment)", "level": 4 },
+      { "name": "ETL Pipelines", "level": 4 },
+      { "name": "Data Warehousing (PostgreSQL, BigQuery)", "level": 1 }
     ]
   },
   {
@@ -69,18 +80,10 @@
       { "name": "Jupyter Notebooks", "level": 5 },
       { "name": "Flask", "level": 4 },
       { "name": "FastAPI", "level": 3 },
-      { "name": "Docker", "level": 4 },
-      { "name": "Git", "level": 5 },
-      { "name": "Bash (Shell)", "level": 4 },
-      { "name": "SLURM", "level": 3 },
+      { "name": "Git (Version Control)", "level": 5 },
+      { "name": "Bash (Shell Scripting & Automation)", "level": 4 },
+      { "name": "SLURM (Job Scheduling)", "level": 3 },
       { "name": "Telegram Bot Development", "level": 4 }
-    ]
-  },
-  {
-    "category": "Data & Databases",
-    "level": 2,
-    "skills": [
-      { "name": "SQL", "level": 1 }
     ]
   },
   {
