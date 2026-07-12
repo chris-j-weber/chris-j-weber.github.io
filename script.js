@@ -1,8 +1,7 @@
-// --- UI enhancements: parallax, scroll progress, reveal-on-scroll, scrollspy ---
+// --- UI enhancements: reveal-on-scroll, subtle parallax, scrollspy ---
 const initUiEnhancements = () => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const progressBar = document.querySelector(".scroll-progress-bar");
   const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
   const navLinks = Array.from(document.querySelectorAll(".navbar .nav-link"));
 
@@ -18,7 +17,7 @@ const initUiEnhancements = () => {
 
   const setActiveLink = () => {
     if (!spyTargets.length) return;
-    const marker = window.scrollY + 140; // just below the sticky navbar
+    const marker = window.scrollY + 120; // just below the sticky navbar
     let current = spyTargets[0];
     for (const target of spyTargets) {
       if (target.section.offsetTop <= marker) current = target;
@@ -28,14 +27,6 @@ const initUiEnhancements = () => {
   };
 
   const onScroll = () => {
-    // Scroll progress
-    if (progressBar) {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
-      progressBar.style.width = `${Math.min(100, Math.max(0, pct))}%`;
-    }
-
-    // Parallax drift
     if (!prefersReducedMotion) {
       const y = window.scrollY;
       for (const el of parallaxEls) {
@@ -43,7 +34,6 @@ const initUiEnhancements = () => {
         el.style.transform = `translate3d(0, ${(y * factor).toFixed(1)}px, 0)`;
       }
     }
-
     setActiveLink();
   };
 
@@ -62,10 +52,20 @@ const initUiEnhancements = () => {
   window.addEventListener("resize", requestTick, { passive: true });
   onScroll();
 
-  // Reveal-on-scroll: applied via JS so content stays visible without JS.
-  const revealEls = Array.from(document.querySelectorAll(".hero .container, section > .card"));
-  if (!prefersReducedMotion && "IntersectionObserver" in window) {
-    revealEls.forEach((el) => el.classList.add("reveal"));
+  // Reveal-on-scroll with a gentle per-group stagger.
+  const revealEls = Array.from(document.querySelectorAll(".reveal"));
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    revealEls.forEach((el) => el.classList.add("is-visible"));
+  } else {
+    // Stagger siblings that share a parent so groups cascade in.
+    const groupCounters = new Map();
+    revealEls.forEach((el) => {
+      const parent = el.parentElement;
+      const n = groupCounters.get(parent) || 0;
+      groupCounters.set(parent, n + 1);
+      el.style.transitionDelay = `${Math.min(n * 90, 360)}ms`;
+    });
+
     const observer = new IntersectionObserver(
       (entries, obs) => {
         entries.forEach((entry) => {
@@ -75,7 +75,7 @@ const initUiEnhancements = () => {
           }
         });
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
     );
     revealEls.forEach((el) => observer.observe(el));
   }
@@ -86,8 +86,7 @@ const initUiEnhancements = () => {
     navLinks.forEach((link) => {
       link.addEventListener("click", () => {
         if (navCollapse.classList.contains("show") && window.bootstrap) {
-          const instance = window.bootstrap.Collapse.getOrCreateInstance(navCollapse);
-          instance.hide();
+          window.bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
         }
       });
     });

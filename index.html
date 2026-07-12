@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Christoph J. Weber – AI & Film Portfolio</title>
+  <script>document.documentElement.classList.add('js');</script>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (Inter as SF Pro fallback on non-Apple devices) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,100 +19,61 @@
   </head>
 <body id="top">
 
-  <!-- Parallax decorative background -->
-  <div class="bg-decor" aria-hidden="true">
-    <span class="orb orb-1" data-parallax="0.15"></span>
-    <span class="orb orb-2" data-parallax="0.28"></span>
-    <span class="orb orb-3" data-parallax="0.2"></span>
-    <span class="bg-grid"></span>
-  </div>
-
-  <!-- Scroll progress indicator -->
-  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress-bar"></span></div>
-
-  <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+  <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#top">CJW</a>
+      <a class="navbar-brand" href="#top">Christoph&nbsp;J.&nbsp;Weber</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
               aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav gap-lg-3">
-          <li class="nav-item">
-            <a class="nav-link" href="#top">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#projects">Projects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#research">Research</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#talks">Talks</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#experience">Experience</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#skills">Skills</a>
-          </li>
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#top">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="#research">Research</a></li>
+          <li class="nav-item"><a class="nav-link" href="#talks">Talks</a></li>
+          <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+          <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
+  <!-- Hero -->
   <section class="hero" id="about">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4 text-center mb-4 mb-md-0">
-          <div class="profile-pic-container" data-parallax="0.08">
-            <img src="images/profile.png" alt="Profile picture of Christoph J. Weber" class="profile-pic">
-          </div>
-        </div>
-        <div class="col-md-8 text-center text-md-start">
-          <h1 class="display-5 fw-bold text-white">Christoph J. Weber</h1>
-          <p class="lead text-white mb-1">
-            PhD Researcher in AI & Film at <strong>HFF Munich</strong> |
-            PhD Candidate in HCI at <strong>LMU Munich</strong>
-          </p>
-          <p class="text-white mb-3">
-            <small>
-              B.Sc. Computational Linguistics, LMU Munich | M.Sc. Computer Science, LMU Munich
-            </small>
-          </p>
-          
-          <div class="social-links-row">
-            <a href="https://www.linkedin.com/in/christoph-j-weber/" target="_blank" class="btn btn-social" title="LinkedIn">
-              <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="https://github.com/chris-j-weber" target="_blank" class="btn btn-social" title="GitHub">
-              <i class="fab fa-github"></i>
-            </a>
-            <a href="https://scholar.google.com/citations?user=oUQxF1EAAAAJ" target="_blank" class="btn btn-social" title="Google Scholar">
-              <i class="fas fa-graduation-cap"></i>
-            </a>
-            <a href="https://dl.acm.org/profile/99661240538" target="_blank" class="btn btn-social" title="ACM DL">
-              <i class="fas fa-university"></i>
-            </a>
-            <a href="https://www.researchgate.net/profile/Christoph-Weber-37" target="_blank" class="btn btn-social" title="ResearchGate">
-              <i class="fab fa-researchgate"></i>
-            </a>
-            <a href="https://letterboxd.com/ChrisJW87/" target="_blank" class="btn btn-social" title="Letterboxd">
-              <i class="fas fa-film"></i>
-            </a>
-          </div>
-        </div>
+    <div class="container hero-inner">
+      <div class="hero-avatar" data-parallax="0.06">
+        <img src="images/profile.png" alt="Portrait of Christoph J. Weber">
+      </div>
+      <p class="eyebrow reveal">AI &amp; Film Research</p>
+      <h1 class="hero-title reveal">Christoph J. Weber</h1>
+      <p class="hero-subtitle reveal">
+        PhD Researcher in AI &amp; Film at <strong>HFF Munich</strong>.<br class="d-none d-md-inline">
+        PhD Candidate in HCI at <strong>LMU Munich</strong>.
+      </p>
+      <p class="hero-meta reveal">
+        B.Sc. Computational Linguistics · M.Sc. Computer Science, LMU Munich
+      </p>
+
+      <div class="social-links-row reveal">
+        <a href="https://www.linkedin.com/in/christoph-j-weber/" target="_blank" class="btn-social" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://github.com/chris-j-weber" target="_blank" class="btn-social" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://scholar.google.com/citations?user=oUQxF1EAAAAJ" target="_blank" class="btn-social" title="Google Scholar" aria-label="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+        <a href="https://dl.acm.org/profile/99661240538" target="_blank" class="btn-social" title="ACM DL" aria-label="ACM Digital Library"><i class="fas fa-university"></i></a>
+        <a href="https://www.researchgate.net/profile/Christoph-Weber-37" target="_blank" class="btn-social" title="ResearchGate" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
+        <a href="https://letterboxd.com/ChrisJW87/" target="_blank" class="btn-social" title="Letterboxd" aria-label="Letterboxd"><i class="fas fa-film"></i></a>
       </div>
     </div>
   </section>
 
-  <!-- Featured Projects Section -->
-  <section class="container my-4" id="projects">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Featured Projects</h2>
-        
+  <!-- Featured Projects -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Work</p>
+        <h2 class="section-title">Featured Projects</h2>
+      </div>
+      <div class="panel reveal">
         <div id="project-switcher-container">
           <!-- Dynamic Project Switcher will be rendered here -->
         </div>
@@ -119,116 +81,108 @@
     </div>
   </section>
 
-  <section class="container my-4" id="research">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Research & Publications</h2>
-        <!-- (Optional introductory content can remain here) -->
-        
+  <!-- Research & Publications -->
+  <section class="section" id="research">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Publications</p>
+        <h2 class="section-title">Research &amp; Publications</h2>
+      </div>
+      <div class="panel reveal">
         <ul class="nav nav-tabs mb-0" id="pubTab" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-authors" type="button" role="tab">
-              All
-            </button>
+            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-authors" type="button" role="tab">All</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="first-tab" data-bs-toggle="tab" data-bs-target="#first-author" type="button" role="tab">
-              First Author
-            </button>
+            <button class="nav-link" id="first-tab" data-bs-toggle="tab" data-bs-target="#first-author" type="button" role="tab">First Author</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="co-tab" data-bs-toggle="tab" data-bs-target="#co-author" type="button" role="tab">
-              Co-Author
-            </button>
+            <button class="nav-link" id="co-tab" data-bs-toggle="tab" data-bs-target="#co-author" type="button" role="tab">Co-Author</button>
           </li>
         </ul>
-        
+
         <div class="tab-content">
-          <!-- All-Authors Publications Accordion -->
           <div class="tab-pane fade show active" id="all-authors" role="tabpanel" aria-labelledby="all-tab">
-            <div class="accordion" id="accordionAllAuthor">
-              <!-- First-author publications will be injected here -->
-            </div>
+            <div class="accordion" id="accordionAllAuthor"></div>
           </div>
-          <!-- First-Author Publications Accordion -->
           <div class="tab-pane fade" id="first-author" role="tabpanel">
-            <div class="accordion" id="accordionFirstAuthor">
-              <!-- First-author publications will be injected here -->
-            </div>
+            <div class="accordion" id="accordionFirstAuthor"></div>
           </div>
-          <!-- Co-Author Publications Accordion -->
           <div class="tab-pane fade" id="co-author" role="tabpanel">
-            <div class="accordion" id="accordionCoAuthor">
-              <!-- Co-author publications will be injected here -->
-            </div>
+            <div class="accordion" id="accordionCoAuthor"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="container my-4" id="talks">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Courses & Talks</h2>
-        <div id="talks-container">
-          <!-- Talks will be injected here -->
+  <!-- Courses & Talks -->
+  <section class="section" id="talks">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Teaching</p>
+        <h2 class="section-title">Courses &amp; Talks</h2>
+      </div>
+      <div class="panel reveal">
+        <div id="talks-container"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience & Education -->
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Career</p>
+        <h2 class="section-title">Experience &amp; Education</h2>
+      </div>
+      <div class="panel reveal">
+        <div id="experience-container"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Expertise</p>
+        <h2 class="section-title">Skills</h2>
+      </div>
+      <div class="panel reveal">
+        <div id="skills-container"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fun Facts -->
+  <section class="section" id="funfacts">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Beyond Work</p>
+        <h2 class="section-title">Fun Facts</h2>
+      </div>
+      <div class="fun-fact-grid reveal">
+        <div class="fun-fact-card">
+          <span class="fun-fact-icon">🎥</span>
+          <p>Check out my film reviews and diary on <a href="https://letterboxd.com/ChrisJW87/" target="_blank">Letterboxd</a>.</p>
+        </div>
+        <div class="fun-fact-card">
+          <span class="fun-fact-icon">🖥️</span>
+          <p>Enthusiastic about self-hosting—running my own services and experimenting with home servers.</p>
+        </div>
+        <div class="fun-fact-card">
+          <span class="fun-fact-icon">⛷️</span>
+          <p>Enjoy skiing and snowboarding in the mountains as well as exploring nature trails.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="container my-4" id="experience">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Experience & Education</h2>
-        <div id="experience-container">
-          <!-- Experience will be injected here -->
-        </div>
-      </div>
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-0">© 2026 Christoph Johannes Weber. All rights reserved.</p>
     </div>
-  </section>
-
-
-  <section class="container my-4" id="skills">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Skills</h2>
-        <div id="skills-container">
-          <!-- Skills werden hier reingerendert -->
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-
-    <!-- Fun Facts -->
-    <section class="container my-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h2 class="card-title mb-4">Fun Facts</h2>
-          
-          <div class="fun-fact-grid">
-            <div class="fun-fact-card">
-              <span class="fun-fact-icon">🎥</span>
-              <p>Check out my film reviews and diary on <a href="https://letterboxd.com/ChrisJW87/" target="_blank">Letterboxd</a>.</p>
-            </div>
-            <div class="fun-fact-card">
-              <span class="fun-fact-icon">🖥️</span>
-              <p>Enthusiastic about self-hosting—running my own services and experimenting with home servers.</p>
-            </div>
-            <div class="fun-fact-card">
-              <span class="fun-fact-icon">⛷️</span>
-              <p>Enjoy skiing and snowboarding in the mountains as well as exploring nature trails.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  <footer class="footer text-center mt-5">
-    <p class="mb-0">© 2026 Christoph Johannes Weber. All rights reserved.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
