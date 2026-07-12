@@ -1,0 +1,26 @@
+[
+  {
+    "id": "asset-hub",
+    "title": "Asset Hub",
+    "subtitle": "One platform for every AI-generated asset",
+    "description": "A central platform where AI generators and LLMs create, refine, and manage digital assets—including images, video, audio, 3D, and splats—across cloud and on-premise.",
+    "status": "Live",
+    "tags": ["Generative AI", "Multi-Modal", "Cloud/On-Premise", "Asset Ops"],
+    "image": "images/asset_hub_preview.png",
+    "link": "https://ai-asset-hub.github.io/",
+    "logoText": "A",
+    "useSvgLogo": true
+  },
+  {
+    "id": "vr-setdesigner",
+    "title": "VR Setdesigner",
+    "subtitle": "Immersive Spatial Scenography (HFF München)",
+    "description": "A high-fidelity Virtual Reality design suite leveraging 3D Gaussian Splatting to bridge physical prop libraries and virtual production stages.",
+    "status": "Research",
+    "tags": ["VR", "Gaussian Splatting", "Virtual Production", "Unity / Unreal"],
+    "image": "images/vr_setdesigner_preview.png",
+    "link": "https://hffmuc.github.io/vr-setdesigner/",
+    "logoText": "VR",
+    "useSvgLogo": false
+  }
+]

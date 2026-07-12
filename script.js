@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+const init = () => {
   // Helper to create one publication block with image + optional toggle
   const createPublicationBlock = (pub, index) => {
     const idSuffix = `${pub.type.replace("-", "")}${index}`;
@@ -20,15 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const expandedContent = `
       <div class="collapse mt-3" id="details-${idSuffix}">
-        <div class="ms-4">
+        <div class="publication-details-box">
           <div class="row g-3 align-items-start">
             <div class="col-md-8">
-              ${pub.journal ? `<p class="mb-1"><strong>Journal:</strong> ${pub.journal}</p>` : ""}
-              ${pub.conference ? `<p class="mb-1"><strong>Conference:</strong> ${pub.conference}</p>` : ""}
-              ${pub.abstract ? `<p class="mb-2"><strong>Abstract:</strong> ${pub.abstract}</p>` : ""}
-              <div class="d-flex gap-2 flex-wrap">
-                ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary btn-sm" target="_blank">📄 PDF</a>` : ""}
-                ${pub.doi ? `<a href="${pub.doi}" class="btn btn-outline-primary btn-sm" target="_blank">DOI</a>` : ""}
+              ${pub.journal ? `<p class="mb-2"><strong>Journal:</strong> ${pub.journal}</p>` : ""}
+              ${pub.conference ? `<p class="mb-2"><strong>Conference:</strong> ${pub.conference}</p>` : ""}
+              ${pub.abstract ? `<p class="mb-3"><strong>Abstract:</strong> ${pub.abstract}</p>` : ""}
+              <div class="d-flex gap-2 flex-wrap mt-3">
+                ${pub.link ? `<a href="${pub.link}" class="btn btn-outline-primary btn-sm px-3" target="_blank">📄 PDF</a>` : ""}
+                ${pub.doi ? `<a href="${pub.doi}" class="btn btn-outline-primary btn-sm px-3" target="_blank">DOI</a>` : ""}
               </div>
             </div>
             <div class="col-md-4">
@@ -39,16 +39,169 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-
     return `
-      <div class="publication-entry border-top pt-3 mt-3">
+      <div class="publication-entry">
         ${collapsedHeader}
         ${expandedContent}
       </div>
     `;
   };
 
-  
+  // Load projects
+  fetch("projects.json")
+    .then((response) => response.json())
+    .then((projects) => {
+      const container = document.getElementById("project-switcher-container");
+      if (!container) return;
+
+      // Create layout structure
+      const switcherLayout = document.createElement("div");
+      switcherLayout.className = "project-switcher-layout";
+
+      const tabsCol = document.createElement("div");
+      tabsCol.className = "project-switcher-tabs";
+
+      const contentCol = document.createElement("div");
+      contentCol.className = "project-switcher-content";
+
+      projects.forEach((proj, index) => {
+        const isActive = index === 0;
+
+        // Generate Tab Button
+        const tabBtn = document.createElement("button");
+        tabBtn.className = `project-tab-btn ${isActive ? 'active' : ''}`;
+        tabBtn.setAttribute("data-project-id", proj.id);
+        tabBtn.innerHTML = `
+          <span class="project-tab-btn-title">${proj.title}</span>
+          <span class="project-tab-btn-subtitle">${proj.subtitle}</span>
+        `;
+        tabsCol.appendChild(tabBtn);
+
+        // Generate Slide Panel
+        const panel = document.createElement("div");
+        panel.className = `project-slide-panel ${isActive ? 'active show' : ''}`;
+        panel.id = `panel-${proj.id}`;
+
+        const tagsHtml = proj.tags.map(t => `<span class="badge tag-badge">${t}</span>`).join("");
+        
+        let logoMarkup = "";
+        if (proj.useSvgLogo) {
+          logoMarkup = `
+            <span class="project-logo-mark asset-hub-mark">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="225 260 600 600" width="20" height="20">
+                <defs>
+                  <linearGradient id="g-logo-${proj.id}" x1="150" y1="210" x2="780" y2="210" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#7a2cff"/>
+                    <stop offset="25%" stop-color="#8c7bff"/>
+                    <stop offset="52%" stop-color="#1ec8e8"/>
+                    <stop offset="65%" stop-color="#46d17a"/>
+                    <stop offset="78%" stop-color="#f0cf4c"/>
+                    <stop offset="90%" stop-color="#ff9540"/>
+                    <stop offset="100%" stop-color="#ff4338"/>
+                  </linearGradient>
+                </defs>
+                <g transform="translate(110,100) scale(0.9)">
+                  <polygon fill="url(#g-logo-${proj.id})" points="150,810 370,210 500,210 280,810"/>
+                  <polygon fill="url(#g-logo-${proj.id})" points="430,210 650,810 780,810 560,210"/>
+                </g>
+              </svg>
+            </span>
+          `;
+        } else {
+          logoMarkup = `
+            <span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>
+          `;
+        }
+
+        panel.innerHTML = `
+          <div class="project-card">
+            <div class="project-card-inner">
+              <div class="project-card-header d-flex justify-content-between align-items-center mb-3">
+                <div class="project-brand">
+                  ${logoMarkup}
+                  <h4 class="project-card-title mb-0">${proj.title}</h4>
+                </div>
+                <span class="badge project-badge ${proj.status === 'Live' ? 'bg-live' : 'bg-research'}">${proj.status}</span>
+              </div>
+              <p class="project-card-subtitle">${proj.subtitle}</p>
+              <p class="project-card-description">${proj.description}</p>
+              <div class="project-tags mb-3">${tagsHtml}</div>
+              <div class="project-visual-wrapper mb-3">
+                <img src="${proj.image}" class="img-fluid project-card-image" alt="${proj.title} Preview">
+              </div>
+              <div class="project-links mt-auto">
+                <a href="${proj.link}" class="btn btn-project-primary w-100" target="_blank">
+                  Visit Project <i class="fas fa-external-link-alt ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+        contentCol.appendChild(panel);
+      });
+
+      switcherLayout.appendChild(tabsCol);
+      switcherLayout.appendChild(contentCol);
+      container.appendChild(switcherLayout);
+
+      // Switching logic
+      let activeIndex = 0;
+      let cycleInterval;
+
+      const setActiveProject = (index) => {
+        const prevBtn = tabsCol.querySelector(".project-tab-btn.active");
+        const prevPanel = contentCol.querySelector(".project-slide-panel.active");
+
+        if (prevBtn) prevBtn.classList.remove("active");
+        if (prevPanel) {
+          prevPanel.classList.remove("show");
+          setTimeout(() => {
+            prevPanel.classList.remove("active");
+          }, 300);
+        }
+
+        setTimeout(() => {
+          const newBtn = tabsCol.querySelectorAll(".project-tab-btn")[index];
+          const newPanel = contentCol.querySelector(`#panel-${projects[index].id}`);
+
+          if (newBtn) newBtn.classList.add("active");
+          if (newPanel) {
+            newPanel.classList.add("active");
+            newPanel.offsetWidth; // trigger reflow
+            newPanel.classList.add("show");
+          }
+        }, prevPanel ? 300 : 0);
+
+        activeIndex = index;
+      };
+
+      const startAutocycle = () => {
+        cycleInterval = setInterval(() => {
+          const nextIndex = (activeIndex + 1) % projects.length;
+          setActiveProject(nextIndex);
+        }, 6000);
+      };
+
+      const stopAutocycle = () => {
+        clearInterval(cycleInterval);
+      };
+
+      // Tab button click events
+      tabsCol.querySelectorAll(".project-tab-btn").forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+          stopAutocycle();
+          setActiveProject(index);
+          startAutocycle();
+        });
+      });
+
+      // Pause cycle on hover
+      container.addEventListener("mouseenter", stopAutocycle);
+      container.addEventListener("mouseleave", startAutocycle);
+
+      // Start the cycle initially
+      startAutocycle();
+    });
 
   // Load publications
   fetch("publications.json")
@@ -58,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const coAuthorContainer = document.getElementById("accordionCoAuthor");
       const allAuthorContainer = document.getElementById("accordionAllAuthor");
 
-      // Sortierte Subsets
+      // Sort subsets
       const firstPubs = data.filter(p => p.type === "first-author").sort((a, b) => b.sortDate.localeCompare(a.sortDate));
       const coPubs = data.filter(p => p.type === "co-author").sort((a, b) => b.sortDate.localeCompare(a.sortDate));
       const allPubs = [...data].sort((a, b) => b.sortDate.localeCompare(a.sortDate));
@@ -75,12 +228,12 @@ document.addEventListener("DOMContentLoaded", () => {
         allAuthorContainer.innerHTML += createPublicationBlock(pub, i, allPubs.length);
       });
 
-
+      // Add collapse event listeners for rotation
       document.querySelectorAll('.publication-header').forEach(header => {
         const icon = header.querySelector('.collapse-icon');
         const collapseId = header.getAttribute('data-bs-target');
-
         const collapseEl = document.querySelector(collapseId);
+        
         if (!collapseEl) return;
 
         collapseEl.addEventListener('show.bs.collapse', () => {
@@ -91,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Add toggle functionality
+      // Add toggle button functionality (if any exist)
       document.querySelectorAll(".toggle-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           setTimeout(() => {
@@ -102,127 +255,149 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     });
-});
 
-  
-// Load talks
-fetch("talks.json")
-  .then((response) => response.json())
-  .then((data) => {
-    const container = document.getElementById("talks-container");
-    data.forEach((talk) => {
-      const talkDiv = document.createElement("div");
-      talkDiv.classList.add("timeline-entry", "mb-4");  // changed from talk-entry
-      talkDiv.innerHTML = `
-        <h5 class="title">
-          ${talk.link ? `<a href="${talk.link}" target="_blank">${talk.title}</a>` : `${talk.title}`}
-        </h5>
-        <div class="context">${talk.location} · ${talk.date}</div>
-        <p>${talk.description}</p>
-      `;
-      container.appendChild(talkDiv);
+  // Load talks
+  fetch("talks.json")
+    .then((response) => response.json())
+    .then((data) => {
+      const container = document.getElementById("talks-container");
+      data.forEach((talk) => {
+        const talkDiv = document.createElement("div");
+        talkDiv.classList.add("timeline-entry");
+        talkDiv.innerHTML = `
+          <h5 class="title">
+            ${talk.link ? `<a href="${talk.link}" target="_blank">${talk.title}</a>` : `${talk.title}`}
+          </h5>
+          <div class="context">${talk.location} · ${talk.date}</div>
+          <p>${talk.description}</p>
+        `;
+        container.appendChild(talkDiv);
+      });
     });
-  });
 
-// Load experience
-fetch("experience.json")
-  .then((response) => response.json())
-  .then((data) => {
-    const container = document.getElementById("experience-container");
+  // Load experience
+  fetch("experience.json")
+    .then((response) => response.json())
+    .then((data) => {
+      const container = document.getElementById("experience-container");
 
-    data.forEach((exp, index) => {
-      const expDiv = document.createElement("div");
-      expDiv.classList.add("timeline-entry");
+      // Group into Work vs Education for clean timeline representation
+      const workLabel = document.createElement("div");
+      workLabel.className = "timeline-section-header mb-4 fw-bold text-uppercase";
+      workLabel.style.fontSize = "0.75rem";
+      workLabel.style.letterSpacing = "0.08em";
+      workLabel.style.color = "var(--text-faint)";
+      workLabel.style.paddingLeft = "0.15rem";
+      workLabel.innerText = "Work Experience";
+      container.appendChild(workLabel);
 
-      expDiv.innerHTML = `
-        <h5 class="title mb-1 fw-semibold">${exp.role}</h5>
-        <div class="context">${exp.organization} · ${exp.duration}</div>
-        ${exp.description ? `<p class="mb-0">${exp.description}</p>` : ""}
-      `;
+      data.forEach((exp, index) => {
+        const expDiv = document.createElement("div");
+        expDiv.classList.add("timeline-entry");
 
-      container.appendChild(expDiv);
+        expDiv.innerHTML = `
+          <h5 class="title mb-1">${exp.role}</h5>
+          <div class="context">${exp.organization} · ${exp.duration}</div>
+          ${exp.description ? `<p class="mb-0">${exp.description}</p>` : ""}
+        `;
 
-      const next = data[index + 1];
-      if (exp.type === "work" && (!next || next.type === "education")) {
-        const divider = document.createElement("hr");
-        divider.className = "my-4";
-        container.appendChild(divider);
-      }
+        container.appendChild(expDiv);
+
+        const next = data[index + 1];
+        if (exp.type === "work" && next && next.type === "education") {
+          const eduLabel = document.createElement("div");
+          eduLabel.className = "timeline-section-header my-4 pt-2 fw-bold text-uppercase";
+          eduLabel.style.fontSize = "0.75rem";
+          eduLabel.style.letterSpacing = "0.08em";
+          eduLabel.style.color = "var(--text-faint)";
+          eduLabel.style.paddingLeft = "0.15rem";
+          eduLabel.innerText = "Education";
+          container.appendChild(eduLabel);
+        }
+      });
     });
-  });
 
-fetch("skills.json")
-  .then(response => response.json())
-  .then(data => {
-    const container = document.getElementById("skills-container");
-    if (!container) return;
+  // Load skills
+  fetch("skills.json")
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById("skills-container");
+      if (!container) return;
 
-    data.forEach((cat, index) => {
-      const catLevel = cat.level ?? 0;
-      const avgDots = Array.from({ length: 5 }, (_, i) => {
-        const filled = i < catLevel ? "dot filled" : "dot";
-        return `<span class="${filled}"></span>`;
-      }).join("");
-
-      const collapseId = `skills-collapse-${index}`;
-      const iconId = `icon-${index}`;
-
-      const catWrapper = document.createElement("div");
-      catWrapper.classList.add("mb-3");
-
-      // Skill-Gruppierung nach Level, dann alphabetisch (absteigend) sortiert
-      const groupedSkills = cat.skills
-        .reduce((groups, skill) => {
-          if (!groups[skill.level]) groups[skill.level] = [];
-          groups[skill.level].push(skill.name);
-          return groups;
-        }, {});
-
-      const sortedSkillBlocks = Object.entries(groupedSkills)
-        .sort((a, b) => b[0] - a[0]) // Level absteigend
-        .map(([level, names]) => {
-          names.sort((a, b) => b.localeCompare(a)); // Alphabetisch absteigend
-
-          const dots = Array.from({ length: 5 }, (_, i) => {
-            const filled = i < level ? "dot filled" : "dot";
-            return `<span class="${filled}"></span>`;
-          }).join("");
-
-          return `
-            <div class="skill-row d-flex justify-content-between align-items-center mb-2 ps-5">
-              <span class="skill-name">${names.join(", ")}</span>
-              <span class="skill-dots d-flex">${dots}</span>
-            </div>
-          `;
+      data.forEach((cat, index) => {
+        const catLevel = cat.level ?? 0;
+        const avgDots = Array.from({ length: 5 }, (_, i) => {
+          const filled = i < catLevel ? "dot filled" : "dot";
+          return `<span class="${filled}"></span>`;
         }).join("");
 
-      catWrapper.innerHTML = `
-        <div class="d-flex justify-content-between align-items-center category-header" role="button"
-             data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false"
-             aria-controls="${collapseId}" onclick="toggleIcon('${iconId}')">
-          <div class="d-flex align-items-center gap-2">
-            <span id="${iconId}" class="collapse-icon">▸</span>
-            <h5 class="fw-semibold mb-0">${cat.category}</h5>
+        const collapseId = `skills-collapse-${index}`;
+        const iconId = `icon-${index}`;
+
+        const catWrapper = document.createElement("div");
+        catWrapper.classList.add("mb-2");
+
+        // Group skills by level, sorted descending
+        const groupedSkills = cat.skills
+          .reduce((groups, skill) => {
+            if (!groups[skill.level]) groups[skill.level] = [];
+            groups[skill.level].push(skill.name);
+            return groups;
+          }, {});
+
+        const sortedSkillBlocks = Object.entries(groupedSkills)
+          .sort((a, b) => b[0] - a[0]) // Level descending
+          .map(([level, names]) => {
+            names.sort((a, b) => b.localeCompare(a)); // Alphabetical descending
+
+            const dots = Array.from({ length: 5 }, (_, i) => {
+              const filled = i < level ? "dot filled" : "dot";
+              return `<span class="${filled}"></span>`;
+            }).join("");
+
+            return `
+              <div class="skill-row d-flex justify-content-between align-items-center mb-2">
+                <span class="skill-name">${names.join(", ")}</span>
+                <span class="skill-dots d-flex">${dots}</span>
+              </div>
+            `;
+          }).join("");
+
+        catWrapper.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center category-header" role="button"
+               data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false"
+               aria-controls="${collapseId}">
+            <div class="d-flex align-items-center gap-2">
+              <span id="${iconId}" class="collapse-icon">▸</span>
+              <h5 class="fw-semibold mb-0">${cat.category}</h5>
+            </div>
+            <div class="skill-dots d-flex">${avgDots}</div>
           </div>
-          <div class="skill-dots d-flex">${avgDots}</div>
-        </div>
 
-        <div class="collapse mt-2" id="${collapseId}">
-          ${sortedSkillBlocks}
-        </div>
-      `;
+          <div class="collapse mt-2" id="${collapseId}">
+            ${sortedSkillBlocks}
+          </div>
+        `;
 
-      container.appendChild(catWrapper);
+        container.appendChild(catWrapper);
+
+        // Add event listener for skills chevron rotation
+        const collapseEl = catWrapper.querySelector(`#${collapseId}`);
+        const iconEl = catWrapper.querySelector(`#${iconId}`);
+        if (collapseEl && iconEl) {
+          collapseEl.addEventListener('show.bs.collapse', () => {
+            iconEl.classList.add('rotate');
+          });
+          collapseEl.addEventListener('hide.bs.collapse', () => {
+            iconEl.classList.remove('rotate');
+          });
+        }
+      });
     });
-  });
-
-// Umschaltfunktion für ▸ / ▾
-window.toggleIcon = function(id) {
-  const icon = document.getElementById(id);
-  if (!icon) return;
-  icon.textContent = icon.textContent === "▸" ? "▾" : "▸";
 };
 
-
-
-
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
