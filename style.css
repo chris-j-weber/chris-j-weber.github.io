@@ -102,11 +102,12 @@ a:hover {
 
 /* Hero Section */
 .hero {
+  position: relative;
   background: radial-gradient(circle at 80% 20%, rgba(129, 140, 248, 0.08), transparent 45%),
-              radial-gradient(circle at 10% 80%, rgba(192, 132, 252, 0.08), transparent 45%),
-              var(--bg);
+              radial-gradient(circle at 10% 80%, rgba(192, 132, 252, 0.08), transparent 45%);
   padding: 6.5rem 0 5.5rem;
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
 
 .profile-pic-container {
@@ -819,5 +820,304 @@ a:hover {
 .project-slide-panel.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ==========================================================================
+   Parallax decorative background
+   Fixed depth layer behind all content. Orbs drift on scroll (via JS),
+   a faint grid adds structure. Sits above the body colour, below content.
+   ========================================================================== */
+body {
+  position: relative;
+  z-index: 0;
+}
+
+.bg-decor {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.orb-1 {
+  width: 45vw;
+  height: 45vw;
+  max-width: 620px;
+  max-height: 620px;
+  top: -8vw;
+  right: -6vw;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.5), transparent 70%);
+}
+
+.orb-2 {
+  width: 40vw;
+  height: 40vw;
+  max-width: 560px;
+  max-height: 560px;
+  top: 45vh;
+  left: -10vw;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.42), transparent 70%);
+}
+
+.orb-3 {
+  width: 38vw;
+  height: 38vw;
+  max-width: 520px;
+  max-height: 520px;
+  bottom: -10vw;
+  right: 5vw;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.22), transparent 70%);
+}
+
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+/* ==========================================================================
+   Scroll progress indicator
+   ========================================================================== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 1040;
+  background: transparent;
+  pointer-events: none;
+}
+
+.scroll-progress-bar {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--primary-gradient);
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.5);
+  transition: width 0.1s linear;
+}
+
+/* ==========================================================================
+   Scroll reveal animations
+   ========================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Navbar — collapsed (mobile) menu polish
+   ========================================================================== */
+.navbar-toggler {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.4rem 0.6rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.25);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(244,244,245,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar .nav-link.active-section {
+  color: var(--text) !important;
+}
+
+.navbar .nav-link.active-section::after {
+  content: '';
+  display: block;
+  height: 2px;
+  width: 100%;
+  margin-top: 2px;
+  border-radius: 2px;
+  background: var(--primary-gradient);
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    margin-top: 0.85rem;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(24, 24, 27, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .navbar-nav {
+    gap: 0.15rem;
+  }
+
+  .navbar .nav-link {
+    padding: 0.7rem 0.85rem !important;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+
+  .navbar .nav-link:hover,
+  .navbar .nav-link.active-section {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .navbar .nav-link.active-section::after {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Responsive refinements (mobile / tablet)
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  .card-body {
+    padding: 1.75rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero {
+    padding: 4rem 0 3.25rem;
+  }
+
+  .profile-pic {
+    width: 140px;
+    height: 140px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 8vw, 2.75rem);
+  }
+
+  .hero p.lead {
+    font-size: 1.05rem;
+  }
+
+  .social-links-row {
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .card-body {
+    padding: 1.4rem 1.25rem;
+  }
+
+  .card-body h2 {
+    font-size: 1.45rem;
+    margin-bottom: 1.35rem !important;
+  }
+
+  .card,
+  .container.my-4 {
+    margin-top: 1.25rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Timeline: tighten the rail so content keeps more width */
+  #talks-container,
+  #experience-container {
+    padding-left: 1.4rem;
+    margin-left: 0.4rem;
+  }
+
+  .timeline-entry::before {
+    left: calc(-1.4rem - 5px);
+  }
+
+  .timeline-entry {
+    margin-bottom: 1.75rem;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .project-visual-wrapper {
+    height: 170px;
+  }
+
+  .skill-name {
+    max-width: 60%;
+    font-size: 0.9rem;
+  }
+
+  .fun-fact-grid,
+  .project-grid {
+    gap: 1rem;
+  }
+
+  /* Larger, easier tap targets on touch */
+  .btn-social {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 380px) {
+  .card-body {
+    padding: 1.2rem 1rem;
+  }
+
+  .orb {
+    opacity: 0.38;
+  }
+}
+
+/* Disable heavy background blur on small screens for performance */
+@media (max-width: 575.98px) {
+  .orb {
+    filter: blur(70px);
+  }
+}
+
+/* ==========================================================================
+   Accessibility — respect reduced-motion preference
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .orb {
+    transform: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 

@@ -1,4 +1,102 @@
+// --- UI enhancements: parallax, scroll progress, reveal-on-scroll, scrollspy ---
+const initUiEnhancements = () => {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const progressBar = document.querySelector(".scroll-progress-bar");
+  const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
+  const navLinks = Array.from(document.querySelectorAll(".navbar .nav-link"));
+
+  // Map each nav link to the section element it points at (#top => hero/about).
+  const spyTargets = navLinks
+    .map((link) => {
+      const hash = (link.getAttribute("href") || "").replace("#", "");
+      const id = hash === "top" ? "about" : hash;
+      const section = document.getElementById(id);
+      return section ? { link, section } : null;
+    })
+    .filter(Boolean);
+
+  const setActiveLink = () => {
+    if (!spyTargets.length) return;
+    const marker = window.scrollY + 140; // just below the sticky navbar
+    let current = spyTargets[0];
+    for (const target of spyTargets) {
+      if (target.section.offsetTop <= marker) current = target;
+    }
+    navLinks.forEach((l) => l.classList.remove("active-section"));
+    if (current) current.link.classList.add("active-section");
+  };
+
+  const onScroll = () => {
+    // Scroll progress
+    if (progressBar) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+      progressBar.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    }
+
+    // Parallax drift
+    if (!prefersReducedMotion) {
+      const y = window.scrollY;
+      for (const el of parallaxEls) {
+        const factor = parseFloat(el.dataset.parallax) || 0;
+        el.style.transform = `translate3d(0, ${(y * factor).toFixed(1)}px, 0)`;
+      }
+    }
+
+    setActiveLink();
+  };
+
+  // rAF-throttled scroll listener
+  let ticking = false;
+  const requestTick = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        onScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+  window.addEventListener("scroll", requestTick, { passive: true });
+  window.addEventListener("resize", requestTick, { passive: true });
+  onScroll();
+
+  // Reveal-on-scroll: applied via JS so content stays visible without JS.
+  const revealEls = Array.from(document.querySelectorAll(".hero .container, section > .card"));
+  if (!prefersReducedMotion && "IntersectionObserver" in window) {
+    revealEls.forEach((el) => el.classList.add("reveal"));
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+    );
+    revealEls.forEach((el) => observer.observe(el));
+  }
+
+  // Close the mobile menu after tapping a nav link.
+  const navCollapse = document.getElementById("navbarNav");
+  if (navCollapse) {
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (navCollapse.classList.contains("show") && window.bootstrap) {
+          const instance = window.bootstrap.Collapse.getOrCreateInstance(navCollapse);
+          instance.hide();
+        }
+      });
+    });
+  }
+};
+
 const init = () => {
+  initUiEnhancements();
+
   // Helper to create one publication block with image + optional toggle
   const createPublicationBlock = (pub, index) => {
     const idSuffix = `${pub.type.replace("-", "")}${index}`;
