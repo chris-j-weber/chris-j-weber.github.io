@@ -144,45 +144,20 @@ const init = () => {
     `;
   };
 
-  // Load projects
+  // Load projects — rendered as equal side-by-side cards (no selector)
   fetch("projects.json")
     .then((response) => response.json())
     .then((projects) => {
-      const container = document.getElementById("project-switcher-container");
+      const container = document.getElementById("project-grid-container");
       if (!container) return;
 
-      // Create layout structure
-      const switcherLayout = document.createElement("div");
-      switcherLayout.className = "project-switcher-layout";
+      const grid = document.createElement("div");
+      grid.className = "project-grid";
 
-      const tabsCol = document.createElement("div");
-      tabsCol.className = "project-switcher-tabs";
-
-      const contentCol = document.createElement("div");
-      contentCol.className = "project-switcher-content";
-
-      projects.forEach((proj, index) => {
-        const isActive = index === 0;
-
-        // Generate Tab Button
-        const tabBtn = document.createElement("button");
-        tabBtn.className = `project-tab-btn ${isActive ? 'active' : ''}`;
-        tabBtn.setAttribute("data-project-id", proj.id);
-        tabBtn.innerHTML = `
-          <span class="project-tab-btn-title">${proj.title}</span>
-          <span class="project-tab-btn-subtitle">${proj.subtitle}</span>
-          <span class="tab-progress"><span class="tab-progress-fill"></span></span>
-        `;
-        tabsCol.appendChild(tabBtn);
-
-        // Generate Slide Panel
-        const panel = document.createElement("div");
-        panel.className = `project-slide-panel ${isActive ? 'active show' : ''}`;
-        panel.id = `panel-${proj.id}`;
-
+      projects.forEach((proj) => {
         const tagsHtml = proj.tags.map(t => `<span class="badge tag-badge">${t}</span>`).join("");
-        
-        let logoMarkup = "";
+
+        let logoMarkup;
         if (proj.useSvgLogo) {
           logoMarkup = `
             <span class="project-logo-mark asset-hub-mark">
@@ -206,120 +181,36 @@ const init = () => {
             </span>
           `;
         } else {
-          logoMarkup = `
-            <span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>
-          `;
+          logoMarkup = `<span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>`;
         }
 
-        panel.innerHTML = `
-          <div class="project-card">
-            <div class="project-visual-wrapper">
-              <img src="${proj.image}" class="project-card-image" alt="${proj.title} Preview" loading="lazy">
-              <span class="project-visual-scrim"></span>
-              <span class="badge project-badge ${proj.status === 'Live' ? 'bg-live' : 'bg-research'}">${proj.status}</span>
+        const card = document.createElement("article");
+        card.className = "project-card";
+        card.innerHTML = `
+          <div class="project-visual-wrapper">
+            <img src="${proj.image}" class="project-card-image" alt="${proj.title} Preview" loading="lazy">
+            <span class="project-visual-scrim"></span>
+            <span class="badge project-badge ${proj.status === 'Live' ? 'bg-live' : 'bg-research'}">${proj.status}</span>
+          </div>
+          <div class="project-card-inner">
+            <div class="project-brand mb-2">
+              ${logoMarkup}
+              <h3 class="project-card-title mb-0">${proj.title}</h3>
             </div>
-            <div class="project-card-inner">
-              <div class="project-brand mb-2">
-                ${logoMarkup}
-                <h4 class="project-card-title mb-0">${proj.title}</h4>
-              </div>
-              <p class="project-card-subtitle">${proj.subtitle}</p>
-              <p class="project-card-description">${proj.description}</p>
-              <div class="project-tags mb-3">${tagsHtml}</div>
-              <div class="project-links mt-auto">
-                <a href="${proj.link}" class="btn btn-project-primary w-100" target="_blank">
-                  Visit Project <i class="fas fa-external-link-alt ms-1"></i>
-                </a>
-              </div>
+            <p class="project-card-subtitle">${proj.subtitle}</p>
+            <p class="project-card-description">${proj.description}</p>
+            <div class="project-tags mb-3">${tagsHtml}</div>
+            <div class="project-links mt-auto">
+              <a href="${proj.link}" class="btn btn-project-primary w-100" target="_blank">
+                Visit Project <i class="fas fa-external-link-alt ms-1"></i>
+              </a>
             </div>
           </div>
         `;
-        contentCol.appendChild(panel);
+        grid.appendChild(card);
       });
 
-      // Faint hint below the tabs (desktop only) explaining the rotation
-      if (projects.length > 1) {
-        const hint = document.createElement("p");
-        hint.className = "project-switcher-hint";
-        hint.textContent = "Auto-rotating — hover to pause";
-        tabsCol.appendChild(hint);
-      }
-
-      switcherLayout.appendChild(tabsCol);
-      switcherLayout.appendChild(contentCol);
-      container.appendChild(switcherLayout);
-
-      // Switching logic
-      const CYCLE_MS = 6000;
-      tabsCol.style.setProperty("--cycle", `${CYCLE_MS}ms`);
-      let activeIndex = 0;
-      let cycleInterval = null;
-
-      // Restart the active tab's progress bar animation from zero.
-      const restartActiveFill = () => {
-        const fill = tabsCol.querySelector(".project-tab-btn.active .tab-progress-fill");
-        if (!fill) return;
-        fill.style.animation = "none";
-        fill.offsetWidth; // force reflow so the animation can replay
-        fill.style.animation = "";
-      };
-
-      const setActiveProject = (index) => {
-        const prevBtn = tabsCol.querySelector(".project-tab-btn.active");
-        const prevPanel = contentCol.querySelector(".project-slide-panel.active");
-        const newBtn = tabsCol.querySelectorAll(".project-tab-btn")[index];
-        const newPanel = contentCol.querySelector(`#panel-${projects[index].id}`);
-
-        // Switch the tab immediately so the progress bar stays in sync.
-        if (prevBtn) prevBtn.classList.remove("active");
-        if (newBtn) newBtn.classList.add("active");
-
-        // Cross-fade the panels.
-        const changing = prevPanel && prevPanel !== newPanel;
-        if (changing) {
-          prevPanel.classList.remove("show");
-          setTimeout(() => prevPanel.classList.remove("active"), 300);
-        }
-        setTimeout(() => {
-          if (newPanel) {
-            newPanel.classList.add("active");
-            newPanel.offsetWidth; // trigger reflow
-            newPanel.classList.add("show");
-          }
-        }, changing ? 300 : 0);
-
-        activeIndex = index;
-      };
-
-      const startAutocycle = () => {
-        if (projects.length < 2) return;
-        tabsCol.classList.remove("paused");
-        restartActiveFill();
-        cycleInterval = setInterval(() => {
-          setActiveProject((activeIndex + 1) % projects.length);
-        }, CYCLE_MS);
-      };
-
-      const stopAutocycle = () => {
-        clearInterval(cycleInterval);
-        cycleInterval = null;
-        tabsCol.classList.add("paused"); // freeze the progress bar
-      };
-
-      // Tab button click events
-      tabsCol.querySelectorAll(".project-tab-btn").forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-          stopAutocycle();
-          setActiveProject(index);
-          startAutocycle();
-        });
-      });
-
-      // Pause cycle (and bar) while hovering the whole switcher
-      container.addEventListener("mouseenter", stopAutocycle);
-      container.addEventListener("mouseleave", startAutocycle);
-
-      startAutocycle();
+      container.appendChild(grid);
     });
 
   // Load publications
