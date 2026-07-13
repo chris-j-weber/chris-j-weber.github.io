@@ -222,8 +222,9 @@ a:hover { color: #b9c6ff; }
 .social-links-row {
   display: flex;
   gap: 0.6rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;          /* always a single row */
   justify-content: center;
+  max-width: 100%;
 }
 .btn-social {
   width: 44px; height: 44px;
@@ -783,12 +784,19 @@ html.js .reveal.is-visible { opacity: 1; transform: none; }
    ========================================================================= */
 @media (max-width: 767.98px) {
   .hero-avatar { width: 108px; height: 108px; margin-bottom: 1.5rem; }
+  .social-links-row { gap: 0.5rem; }
+  .btn-social { width: 42px; height: 42px; font-size: 1rem; }
   .panel { border-radius: 18px; }
   .project-visual-wrapper { height: 190px; }
   .skill-name { max-width: 62%; font-size: 0.9rem; }
   #talks-container,
   #experience-container { padding-left: 1.5rem; margin-left: 0.35rem; }
   .timeline-entry::before { left: calc(-1.5rem - 4px); }
+}
+
+@media (max-width: 360px) {
+  .social-links-row { gap: 0.4rem; }
+  .btn-social { width: 38px; height: 38px; font-size: 0.9rem; }
 }
 
 /* =========================================================================
