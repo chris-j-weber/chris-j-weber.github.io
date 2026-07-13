@@ -337,6 +337,57 @@ a:hover { color: #b9c6ff; }
 }
 .project-tab-btn.active .project-tab-btn-subtitle { color: var(--accent-soft); }
 
+/* Auto-rotation progress bar on the active tab */
+.tab-progress {
+  height: 2px;
+  margin-top: 0.65rem;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.project-tab-btn.active .tab-progress { opacity: 1; }
+.tab-progress-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.project-tab-btn.active .tab-progress-fill {
+  animation: tab-fill var(--cycle, 6000ms) linear forwards;
+}
+.project-switcher-tabs.paused .project-tab-btn.active .tab-progress-fill {
+  animation-play-state: paused;
+}
+@keyframes tab-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Hint below the tabs (desktop) */
+.project-switcher-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.project-switcher-hint::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 7px rgba(63, 123, 255, 0.7);
+}
+@media (max-width: 991.98px) {
+  .project-switcher-hint { display: none; }
+}
+
 /* Slide panels */
 .project-slide-panel {
   opacity: 0;
@@ -353,12 +404,20 @@ a:hover { color: #b9c6ff; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.project-slide-panel.show .project-card {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
 }
 .project-card-inner {
   padding: 1.6rem;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 auto;
 }
 
 .project-brand { display: flex; align-items: center; gap: 0.7rem; }
@@ -380,19 +439,25 @@ a:hover { color: #b9c6ff; }
 }
 
 .project-badge {
-  padding: 0.35em 0.85em;
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 2;
+  padding: 0.4em 0.9em;
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-muted);
+  background: rgba(8, 8, 11, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-secondary);
 }
 .bg-live {
   color: var(--live);
-  border-color: rgba(127, 224, 166, 0.35);
-  background: rgba(127, 224, 166, 0.1);
+  border-color: rgba(127, 224, 166, 0.4);
+  background: rgba(10, 30, 20, 0.55);
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
@@ -432,20 +497,28 @@ a:hover { color: #b9c6ff; }
 }
 
 .project-visual-wrapper {
+  position: relative;
   width: 100%;
-  height: 240px;
-  border-radius: var(--radius-sm);
+  height: 260px;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   background: #000;
 }
 .project-card-image {
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: top;
-  transition: transform 0.7s var(--ease);
+  transition: transform 0.9s var(--ease);
 }
-.project-card:hover .project-card-image { transform: scale(1.04); }
+.project-card:hover .project-card-image { transform: scale(1.05); }
+
+.project-visual-scrim {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 55%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(16, 16, 22, 0.55));
+}
 
 /* Buttons */
 .btn-project-primary {
@@ -739,6 +812,7 @@ html.js .reveal.is-visible { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
   html.js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   .hero-avatar { transform: none !important; }
+  .tab-progress { display: none !important; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
