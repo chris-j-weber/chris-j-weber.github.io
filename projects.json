@@ -17,7 +17,7 @@
     "subtitle": "Immersive Spatial Scenography (HFF München)",
     "description": "A high-fidelity Virtual Reality design suite leveraging 3D Gaussian Splatting to bridge physical prop libraries and virtual production stages.",
     "status": "Research",
-    "tags": ["VR", "Gaussian Splatting", "Virtual Production", "Unity / Unreal"],
+    "tags": ["VR", "Gaussian Splatting", "Virtual Production", "Unity"],
     "image": "images/vr_setdesigner_preview.png",
     "link": "https://hffmuc.github.io/vr-setdesigner/",
     "logoText": "VR",

@@ -611,7 +611,9 @@ a:hover { color: #b9c6ff; }
 #experience-container::before {
   content: '';
   position: absolute;
-  left: 0; top: 6px; bottom: 6px;
+  left: 0;
+  top: var(--rail-top, 6px);
+  height: var(--rail-height, calc(100% - 12px));
   width: 1px;
   background: var(--border-strong);
 }
