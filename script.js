@@ -93,6 +93,27 @@ const initUiEnhancements = () => {
   }
 };
 
+// --- Fit a timeline's rail so it spans only from the first dot to the last ---
+const fitTimelineRail = (container) => {
+  if (!container) return;
+  const apply = () => {
+    const entries = container.querySelectorAll(".timeline-entry");
+    if (!entries.length) return;
+    const dotCenter = 11; // dot top (7px) + ~half the 9px dot
+    const top = entries[0].offsetTop + dotCenter;
+    // Anchor the rail at the first dot (closed top); let it run open to the bottom.
+    const height = Math.max(0, container.clientHeight - top);
+    container.style.setProperty("--rail-top", `${top}px`);
+    container.style.setProperty("--rail-height", `${height}px`);
+  };
+  apply();
+  let t = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(t);
+    t = setTimeout(apply, 150);
+  }, { passive: true });
+};
+
 // --- Scroll-linked motion for project images (top-left stays pinned) ---
 const initImageParallax = (images) => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -424,6 +445,7 @@ const init = () => {
         `;
         container.appendChild(talkDiv);
       });
+      fitTimelineRail(container);
     });
 
   // Load experience
@@ -466,6 +488,7 @@ const init = () => {
           container.appendChild(eduLabel);
         }
       });
+      fitTimelineRail(container);
     });
 
   // Load skills
