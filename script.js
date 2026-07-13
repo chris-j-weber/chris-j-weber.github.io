@@ -93,6 +93,34 @@ const initUiEnhancements = () => {
   }
 };
 
+// --- Scroll-linked motion for project images (top-left stays pinned) ---
+const initImageParallax = (images) => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!images.length) return;
+
+  let ticking = false;
+  const update = () => {
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    images.forEach((img) => {
+      const r = img.getBoundingClientRect();
+      if (r.bottom < -80 || r.top > vh + 80) return; // skip off-screen
+      // progress 0 (entering from bottom) -> 1 (leaving past top)
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      const scale = (1 + p * 0.07).toFixed(4);
+      img.style.transform = `scale(${scale})`;
+    });
+    ticking = false;
+  };
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  update();
+};
+
 // --- Horizontal project carousel: arrows, dots, swipe, gentle auto-rotate ---
 const initProjectCarousel = ({ carousel, track, prevBtn, nextBtn, dots }) => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -323,6 +351,7 @@ const init = () => {
       container.appendChild(carousel);
 
       initProjectCarousel({ carousel, track, prevBtn, nextBtn, dots });
+      initImageParallax(Array.from(track.querySelectorAll(".project-card-image")));
     });
 
   // Load publications
