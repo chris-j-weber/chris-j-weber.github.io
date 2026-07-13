@@ -1,4 +1,214 @@
+// --- UI enhancements: reveal-on-scroll, subtle parallax, scrollspy ---
+const initUiEnhancements = () => {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
+  const navLinks = Array.from(document.querySelectorAll(".navbar .nav-link"));
+
+  // Map each nav link to the section element it points at (#top => hero/about).
+  const spyTargets = navLinks
+    .map((link) => {
+      const hash = (link.getAttribute("href") || "").replace("#", "");
+      const id = hash === "top" ? "about" : hash;
+      const section = document.getElementById(id);
+      return section ? { link, section } : null;
+    })
+    .filter(Boolean);
+
+  const setActiveLink = () => {
+    if (!spyTargets.length) return;
+    const marker = window.scrollY + 120; // just below the sticky navbar
+    let current = spyTargets[0];
+    for (const target of spyTargets) {
+      if (target.section.offsetTop <= marker) current = target;
+    }
+    navLinks.forEach((l) => l.classList.remove("active-section"));
+    if (current) current.link.classList.add("active-section");
+  };
+
+  const onScroll = () => {
+    if (!prefersReducedMotion) {
+      const y = window.scrollY;
+      for (const el of parallaxEls) {
+        const factor = parseFloat(el.dataset.parallax) || 0;
+        el.style.transform = `translate3d(0, ${(y * factor).toFixed(1)}px, 0)`;
+      }
+    }
+    setActiveLink();
+  };
+
+  // rAF-throttled scroll listener
+  let ticking = false;
+  const requestTick = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        onScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+  window.addEventListener("scroll", requestTick, { passive: true });
+  window.addEventListener("resize", requestTick, { passive: true });
+  onScroll();
+
+  // Reveal-on-scroll with a gentle per-group stagger.
+  const revealEls = Array.from(document.querySelectorAll(".reveal"));
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    revealEls.forEach((el) => el.classList.add("is-visible"));
+  } else {
+    // Stagger siblings that share a parent so groups cascade in.
+    const groupCounters = new Map();
+    revealEls.forEach((el) => {
+      const parent = el.parentElement;
+      const n = groupCounters.get(parent) || 0;
+      groupCounters.set(parent, n + 1);
+      el.style.transitionDelay = `${Math.min(n * 90, 360)}ms`;
+    });
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+    );
+    revealEls.forEach((el) => observer.observe(el));
+  }
+
+  // Close the mobile menu after tapping a nav link.
+  const navCollapse = document.getElementById("navbarNav");
+  if (navCollapse) {
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (navCollapse.classList.contains("show") && window.bootstrap) {
+          window.bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
+        }
+      });
+    });
+  }
+};
+
+// --- Scroll-linked motion for project images (top-left stays pinned) ---
+const initImageParallax = (images) => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!images.length) return;
+
+  let ticking = false;
+  const update = () => {
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    images.forEach((img) => {
+      const r = img.getBoundingClientRect();
+      if (r.bottom < -80 || r.top > vh + 80) return; // skip off-screen
+      // progress 0 (entering from bottom) -> 1 (leaving past top)
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      const scale = (1 + p * 0.07).toFixed(4);
+      img.style.transform = `scale(${scale})`;
+    });
+    ticking = false;
+  };
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  update();
+};
+
+// --- Horizontal project carousel: arrows, dots, swipe, gentle auto-rotate ---
+const initProjectCarousel = ({ carousel, track, prevBtn, nextBtn, dots }) => {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cards = Array.from(track.children);
+  if (!cards.length) return;
+
+  const AUTO_MS = 6500;
+  let autoTimer = null;
+  let step = track.clientWidth;   // width of one card incl. gap
+  let perView = 1;
+  let pageCount = 1;
+
+  const measure = () => {
+    step = cards.length > 1 ? Math.round(cards[1].offsetLeft - cards[0].offsetLeft) : track.clientWidth;
+    if (step < 1) step = track.clientWidth;
+    perView = Math.max(1, Math.round(track.clientWidth / step));
+    pageCount = Math.max(1, Math.ceil(cards.length / perView));
+  };
+
+  const currentPage = () => Math.round(track.scrollLeft / (perView * step));
+
+  const goToPage = (page) => {
+    const p = ((page % pageCount) + pageCount) % pageCount; // wrap both ways
+    track.scrollTo({ left: p * perView * step, behavior: "smooth" });
+  };
+
+  const buildDots = () => {
+    dots.innerHTML = "";
+    for (let i = 0; i < pageCount; i++) {
+      const dot = document.createElement("button");
+      dot.className = "carousel-dot";
+      dot.setAttribute("aria-label", `Go to project group ${i + 1}`);
+      dot.addEventListener("click", () => { goToPage(i); restartAuto(); });
+      dots.appendChild(dot);
+    }
+    updateUI();
+  };
+
+  const updateUI = () => {
+    const cur = currentPage();
+    Array.from(dots.children).forEach((d, i) => d.classList.toggle("active", i === cur));
+    const single = pageCount <= 1;
+    carousel.classList.toggle("is-single", single);
+  };
+
+  const stopAuto = () => { clearInterval(autoTimer); autoTimer = null; };
+  const startAuto = () => {
+    if (prefersReducedMotion || pageCount <= 1) return;
+    stopAuto();
+    autoTimer = setInterval(() => goToPage(currentPage() + 1), AUTO_MS);
+  };
+  const restartAuto = () => { if (autoTimer) startAuto(); };
+
+  prevBtn.addEventListener("click", () => { goToPage(currentPage() - 1); restartAuto(); });
+  nextBtn.addEventListener("click", () => { goToPage(currentPage() + 1); restartAuto(); });
+
+  // Reflect scroll position in dots (throttled)
+  let ticking = false;
+  track.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => { updateUI(); ticking = false; });
+  }, { passive: true });
+
+  // Pause auto-rotation while the user is engaging with it
+  ["mouseenter", "focusin", "touchstart", "pointerdown"].forEach((ev) =>
+    carousel.addEventListener(ev, stopAuto, { passive: true }));
+  ["mouseleave", "focusout"].forEach((ev) =>
+    carousel.addEventListener(ev, startAuto, { passive: true }));
+
+  const setup = () => { measure(); buildDots(); };
+  setup();
+  startAuto();
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const page = currentPage();
+      setup();
+      track.scrollTo({ left: page * perView * step });
+    }, 150);
+  }, { passive: true });
+};
+
 const init = () => {
+  initUiEnhancements();
+
   // Helper to create one publication block with image + optional toggle
   const createPublicationBlock = (pub, index) => {
     const idSuffix = `${pub.type.replace("-", "")}${index}`;
@@ -47,44 +257,20 @@ const init = () => {
     `;
   };
 
-  // Load projects
+  // Load projects — rendered as a horizontal, rotating carousel
   fetch("projects.json")
     .then((response) => response.json())
     .then((projects) => {
-      const container = document.getElementById("project-switcher-container");
+      const container = document.getElementById("project-grid-container");
       if (!container) return;
 
-      // Create layout structure
-      const switcherLayout = document.createElement("div");
-      switcherLayout.className = "project-switcher-layout";
+      const track = document.createElement("div");
+      track.className = "carousel-track";
 
-      const tabsCol = document.createElement("div");
-      tabsCol.className = "project-switcher-tabs";
-
-      const contentCol = document.createElement("div");
-      contentCol.className = "project-switcher-content";
-
-      projects.forEach((proj, index) => {
-        const isActive = index === 0;
-
-        // Generate Tab Button
-        const tabBtn = document.createElement("button");
-        tabBtn.className = `project-tab-btn ${isActive ? 'active' : ''}`;
-        tabBtn.setAttribute("data-project-id", proj.id);
-        tabBtn.innerHTML = `
-          <span class="project-tab-btn-title">${proj.title}</span>
-          <span class="project-tab-btn-subtitle">${proj.subtitle}</span>
-        `;
-        tabsCol.appendChild(tabBtn);
-
-        // Generate Slide Panel
-        const panel = document.createElement("div");
-        panel.className = `project-slide-panel ${isActive ? 'active show' : ''}`;
-        panel.id = `panel-${proj.id}`;
-
+      projects.forEach((proj) => {
         const tagsHtml = proj.tags.map(t => `<span class="badge tag-badge">${t}</span>`).join("");
-        
-        let logoMarkup = "";
+
+        let logoMarkup;
         if (proj.useSvgLogo) {
           logoMarkup = `
             <span class="project-logo-mark asset-hub-mark">
@@ -108,99 +294,64 @@ const init = () => {
             </span>
           `;
         } else {
-          logoMarkup = `
-            <span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>
-          `;
+          logoMarkup = `<span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>`;
         }
 
-        panel.innerHTML = `
-          <div class="project-card">
-            <div class="project-card-inner">
-              <div class="project-card-header d-flex justify-content-between align-items-center mb-3">
-                <div class="project-brand">
-                  ${logoMarkup}
-                  <h4 class="project-card-title mb-0">${proj.title}</h4>
-                </div>
-                <span class="badge project-badge ${proj.status === 'Live' ? 'bg-live' : 'bg-research'}">${proj.status}</span>
-              </div>
-              <p class="project-card-subtitle">${proj.subtitle}</p>
-              <p class="project-card-description">${proj.description}</p>
-              <div class="project-tags mb-3">${tagsHtml}</div>
-              <div class="project-visual-wrapper mb-3">
-                <img src="${proj.image}" class="img-fluid project-card-image" alt="${proj.title} Preview">
-              </div>
-              <div class="project-links mt-auto">
-                <a href="${proj.link}" class="btn btn-project-primary w-100" target="_blank">
-                  Visit Project <i class="fas fa-external-link-alt ms-1"></i>
-                </a>
-              </div>
+        const card = document.createElement("article");
+        card.className = "project-card";
+        card.innerHTML = `
+          <div class="project-visual-wrapper">
+            <img src="${proj.image}" class="project-card-image" alt="${proj.title} Preview" loading="lazy">
+            <span class="project-visual-scrim"></span>
+            <span class="badge project-badge ${proj.status === 'Live' ? 'bg-live' : 'bg-research'}">${proj.status}</span>
+          </div>
+          <div class="project-card-inner">
+            <div class="project-brand mb-2">
+              ${logoMarkup}
+              <h3 class="project-card-title mb-0">${proj.title}</h3>
+            </div>
+            <p class="project-card-subtitle">${proj.subtitle}</p>
+            <p class="project-card-description">${proj.description}</p>
+            <div class="project-tags mb-3">${tagsHtml}</div>
+            <div class="project-links mt-auto">
+              <a href="${proj.link}" class="btn btn-project-primary w-100" target="_blank">
+                Visit Project <i class="fas fa-external-link-alt ms-1"></i>
+              </a>
             </div>
           </div>
         `;
-        contentCol.appendChild(panel);
+        track.appendChild(card);
       });
 
-      switcherLayout.appendChild(tabsCol);
-      switcherLayout.appendChild(contentCol);
-      container.appendChild(switcherLayout);
+      // Assemble carousel shell
+      const carousel = document.createElement("div");
+      carousel.className = "project-carousel";
 
-      // Switching logic
-      let activeIndex = 0;
-      let cycleInterval;
+      const prevBtn = document.createElement("button");
+      prevBtn.className = "carousel-arrow carousel-prev";
+      prevBtn.setAttribute("aria-label", "Previous projects");
+      prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
 
-      const setActiveProject = (index) => {
-        const prevBtn = tabsCol.querySelector(".project-tab-btn.active");
-        const prevPanel = contentCol.querySelector(".project-slide-panel.active");
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "carousel-arrow carousel-next";
+      nextBtn.setAttribute("aria-label", "Next projects");
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
 
-        if (prevBtn) prevBtn.classList.remove("active");
-        if (prevPanel) {
-          prevPanel.classList.remove("show");
-          setTimeout(() => {
-            prevPanel.classList.remove("active");
-          }, 300);
-        }
+      const dots = document.createElement("div");
+      dots.className = "carousel-dots";
 
-        setTimeout(() => {
-          const newBtn = tabsCol.querySelectorAll(".project-tab-btn")[index];
-          const newPanel = contentCol.querySelector(`#panel-${projects[index].id}`);
+      const controls = document.createElement("div");
+      controls.className = "carousel-controls";
+      controls.appendChild(prevBtn);
+      controls.appendChild(dots);
+      controls.appendChild(nextBtn);
 
-          if (newBtn) newBtn.classList.add("active");
-          if (newPanel) {
-            newPanel.classList.add("active");
-            newPanel.offsetWidth; // trigger reflow
-            newPanel.classList.add("show");
-          }
-        }, prevPanel ? 300 : 0);
+      carousel.appendChild(track);
+      carousel.appendChild(controls);
+      container.appendChild(carousel);
 
-        activeIndex = index;
-      };
-
-      const startAutocycle = () => {
-        cycleInterval = setInterval(() => {
-          const nextIndex = (activeIndex + 1) % projects.length;
-          setActiveProject(nextIndex);
-        }, 6000);
-      };
-
-      const stopAutocycle = () => {
-        clearInterval(cycleInterval);
-      };
-
-      // Tab button click events
-      tabsCol.querySelectorAll(".project-tab-btn").forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-          stopAutocycle();
-          setActiveProject(index);
-          startAutocycle();
-        });
-      });
-
-      // Pause cycle on hover
-      container.addEventListener("mouseenter", stopAutocycle);
-      container.addEventListener("mouseleave", startAutocycle);
-
-      // Start the cycle initially
-      startAutocycle();
+      initProjectCarousel({ carousel, track, prevBtn, nextBtn, dots });
+      initImageParallax(Array.from(track.querySelectorAll(".project-card-image")));
     });
 
   // Load publications
