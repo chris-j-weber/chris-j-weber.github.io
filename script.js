@@ -101,9 +101,10 @@ const fitTimelineRail = (container) => {
     if (!entries.length) return;
     const dotCenter = 11; // dot top (7px) + ~half the 9px dot
     const top = entries[0].offsetTop + dotCenter;
-    const bottom = entries[entries.length - 1].offsetTop + dotCenter;
+    // Anchor the rail at the first dot (closed top); let it run open to the bottom.
+    const height = Math.max(0, container.clientHeight - top);
     container.style.setProperty("--rail-top", `${top}px`);
-    container.style.setProperty("--rail-height", `${Math.max(0, bottom - top)}px`);
+    container.style.setProperty("--rail-height", `${height}px`);
   };
   apply();
   let t = null;
