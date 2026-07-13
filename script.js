@@ -1,3 +1,7 @@
+// Bump this when data/assets change so browsers fetch fresh files.
+const ASSET_VERSION = "4";
+const dataUrl = (name) => `${name}?v=${ASSET_VERSION}`;
+
 // --- UI enhancements: reveal-on-scroll, subtle parallax, scrollspy ---
 const initUiEnhancements = () => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -279,7 +283,7 @@ const init = () => {
   };
 
   // Load projects — rendered as a horizontal, rotating carousel
-  fetch("projects.json")
+  fetch(dataUrl("projects.json"))
     .then((response) => response.json())
     .then((projects) => {
       const container = document.getElementById("project-grid-container");
@@ -376,7 +380,7 @@ const init = () => {
     });
 
   // Load publications
-  fetch("publications.json")
+  fetch(dataUrl("publications.json"))
     .then((response) => response.json())
     .then((data) => {
       const firstAuthorContainer = document.getElementById("accordionFirstAuthor");
@@ -429,7 +433,7 @@ const init = () => {
     });
 
   // Load talks
-  fetch("talks.json")
+  fetch(dataUrl("talks.json"))
     .then((response) => response.json())
     .then((data) => {
       const container = document.getElementById("talks-container");
@@ -449,7 +453,7 @@ const init = () => {
     });
 
   // Load experience
-  fetch("experience.json")
+  fetch(dataUrl("experience.json"))
     .then((response) => response.json())
     .then((data) => {
       const container = document.getElementById("experience-container");
@@ -492,7 +496,7 @@ const init = () => {
     });
 
   // Load skills
-  fetch("skills.json")
+  fetch(dataUrl("skills.json"))
     .then(response => response.json())
     .then(data => {
       const container = document.getElementById("skills-container");
