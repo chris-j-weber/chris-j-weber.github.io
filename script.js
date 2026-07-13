@@ -93,6 +93,91 @@ const initUiEnhancements = () => {
   }
 };
 
+// --- Horizontal project carousel: arrows, dots, swipe, gentle auto-rotate ---
+const initProjectCarousel = ({ carousel, track, prevBtn, nextBtn, dots }) => {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cards = Array.from(track.children);
+  if (!cards.length) return;
+
+  const AUTO_MS = 6500;
+  let autoTimer = null;
+  let step = track.clientWidth;   // width of one card incl. gap
+  let perView = 1;
+  let pageCount = 1;
+
+  const measure = () => {
+    step = cards.length > 1 ? Math.round(cards[1].offsetLeft - cards[0].offsetLeft) : track.clientWidth;
+    if (step < 1) step = track.clientWidth;
+    perView = Math.max(1, Math.round(track.clientWidth / step));
+    pageCount = Math.max(1, Math.ceil(cards.length / perView));
+  };
+
+  const currentPage = () => Math.round(track.scrollLeft / (perView * step));
+
+  const goToPage = (page) => {
+    const p = ((page % pageCount) + pageCount) % pageCount; // wrap both ways
+    track.scrollTo({ left: p * perView * step, behavior: "smooth" });
+  };
+
+  const buildDots = () => {
+    dots.innerHTML = "";
+    for (let i = 0; i < pageCount; i++) {
+      const dot = document.createElement("button");
+      dot.className = "carousel-dot";
+      dot.setAttribute("aria-label", `Go to project group ${i + 1}`);
+      dot.addEventListener("click", () => { goToPage(i); restartAuto(); });
+      dots.appendChild(dot);
+    }
+    updateUI();
+  };
+
+  const updateUI = () => {
+    const cur = currentPage();
+    Array.from(dots.children).forEach((d, i) => d.classList.toggle("active", i === cur));
+    const single = pageCount <= 1;
+    carousel.classList.toggle("is-single", single);
+  };
+
+  const stopAuto = () => { clearInterval(autoTimer); autoTimer = null; };
+  const startAuto = () => {
+    if (prefersReducedMotion || pageCount <= 1) return;
+    stopAuto();
+    autoTimer = setInterval(() => goToPage(currentPage() + 1), AUTO_MS);
+  };
+  const restartAuto = () => { if (autoTimer) startAuto(); };
+
+  prevBtn.addEventListener("click", () => { goToPage(currentPage() - 1); restartAuto(); });
+  nextBtn.addEventListener("click", () => { goToPage(currentPage() + 1); restartAuto(); });
+
+  // Reflect scroll position in dots (throttled)
+  let ticking = false;
+  track.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => { updateUI(); ticking = false; });
+  }, { passive: true });
+
+  // Pause auto-rotation while the user is engaging with it
+  ["mouseenter", "focusin", "touchstart", "pointerdown"].forEach((ev) =>
+    carousel.addEventListener(ev, stopAuto, { passive: true }));
+  ["mouseleave", "focusout"].forEach((ev) =>
+    carousel.addEventListener(ev, startAuto, { passive: true }));
+
+  const setup = () => { measure(); buildDots(); };
+  setup();
+  startAuto();
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const page = currentPage();
+      setup();
+      track.scrollTo({ left: page * perView * step });
+    }, 150);
+  }, { passive: true });
+};
+
 const init = () => {
   initUiEnhancements();
 
@@ -144,15 +229,15 @@ const init = () => {
     `;
   };
 
-  // Load projects — rendered as equal side-by-side cards (no selector)
+  // Load projects — rendered as a horizontal, rotating carousel
   fetch("projects.json")
     .then((response) => response.json())
     .then((projects) => {
       const container = document.getElementById("project-grid-container");
       if (!container) return;
 
-      const grid = document.createElement("div");
-      grid.className = "project-grid";
+      const track = document.createElement("div");
+      track.className = "carousel-track";
 
       projects.forEach((proj) => {
         const tagsHtml = proj.tags.map(t => `<span class="badge tag-badge">${t}</span>`).join("");
@@ -207,10 +292,37 @@ const init = () => {
             </div>
           </div>
         `;
-        grid.appendChild(card);
+        track.appendChild(card);
       });
 
-      container.appendChild(grid);
+      // Assemble carousel shell
+      const carousel = document.createElement("div");
+      carousel.className = "project-carousel";
+
+      const prevBtn = document.createElement("button");
+      prevBtn.className = "carousel-arrow carousel-prev";
+      prevBtn.setAttribute("aria-label", "Previous projects");
+      prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "carousel-arrow carousel-next";
+      nextBtn.setAttribute("aria-label", "Next projects");
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+
+      const dots = document.createElement("div");
+      dots.className = "carousel-dots";
+
+      const controls = document.createElement("div");
+      controls.className = "carousel-controls";
+      controls.appendChild(prevBtn);
+      controls.appendChild(dots);
+      controls.appendChild(nextBtn);
+
+      carousel.appendChild(track);
+      carousel.appendChild(controls);
+      container.appendChild(carousel);
+
+      initProjectCarousel({ carousel, track, prevBtn, nextBtn, dots });
     });
 
   // Load publications
