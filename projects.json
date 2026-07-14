@@ -7,6 +7,8 @@
     "status": "Live",
     "tags": ["Generative AI", "Multi-Modal", "Open Source", "Self-Hosted"],
     "image": "images/asset_hub_preview.png",
+    "video": "https://ai-asset-hub.github.io/assets/walkthrough.mp4",
+    "videoPoster": "https://ai-asset-hub.github.io/assets/walkthrough-poster.jpg",
     "link": "https://ai-asset-hub.github.io/",
     "logoText": "A",
     "useSvgLogo": true

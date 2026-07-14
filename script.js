@@ -1,5 +1,5 @@
 // Bump this when data/assets change so browsers fetch fresh files.
-const ASSET_VERSION = "4";
+const ASSET_VERSION = "5";
 const dataUrl = (name) => `${name}?v=${ASSET_VERSION}`;
 
 // --- UI enhancements: reveal-on-scroll, subtle parallax, scrollspy ---
@@ -144,6 +144,40 @@ const initImageParallax = (images) => {
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
   update();
+};
+
+// --- Inline walkthrough videos on project cards ---
+// Autoplays only while the card is on screen; swaps to the static preview
+// image if the video can't be loaded.
+const initCardVideos = (videos) => {
+  if (!videos.length) return;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  videos.forEach((video) => {
+    video.addEventListener("error", () => {
+      const img = document.createElement("img");
+      img.src = video.dataset.fallbackImage || video.poster;
+      img.className = "project-card-image";
+      img.alt = "Project preview";
+      img.loading = "lazy";
+      video.replaceWith(img);
+    });
+    // Reduced motion: no autoplay, but keep the video watchable on demand.
+    if (prefersReducedMotion) video.controls = true;
+  });
+
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (isIntersecting) {
+        target.play().catch(() => { target.controls = true; });
+      } else {
+        target.pause();
+      }
+    });
+  }, { threshold: 0.35 });
+  videos.forEach((video) => observer.observe(video));
 };
 
 // --- Horizontal project carousel: arrows, dots, swipe, gentle auto-rotate ---
@@ -322,11 +356,19 @@ const init = () => {
           logoMarkup = `<span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>`;
         }
 
+        // Prefer a walkthrough video when the project provides one; the
+        // static preview image stays as poster and error fallback.
+        const visualMarkup = proj.video
+          ? `<video src="${proj.video}" poster="${proj.videoPoster || proj.image}" class="project-card-video"
+               muted loop playsinline preload="metadata" data-fallback-image="${proj.image}"
+               aria-label="${proj.title} walkthrough video"></video>`
+          : `<img src="${proj.image}" class="project-card-image" alt="${proj.title} Preview" loading="lazy">`;
+
         const card = document.createElement("article");
         card.className = "project-card";
         card.innerHTML = `
           <div class="project-visual-wrapper">
-            <img src="${proj.image}" class="project-card-image" alt="${proj.title} Preview" loading="lazy">
+            ${visualMarkup}
             <span class="project-visual-scrim"></span>
             <span class="badge project-badge ${proj.status === 'Live' ? 'bg-live' : 'bg-research'}">${proj.status}</span>
           </div>
@@ -377,6 +419,7 @@ const init = () => {
 
       initProjectCarousel({ carousel, track, prevBtn, nextBtn, dots });
       initImageParallax(Array.from(track.querySelectorAll(".project-card-image")));
+      initCardVideos(Array.from(track.querySelectorAll(".project-card-video")));
     });
 
   // Load publications
