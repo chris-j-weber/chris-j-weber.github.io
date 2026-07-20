@@ -411,7 +411,7 @@ a:hover { color: #b9c6ff; }
 .wordmark-svg { height: 1.14em; width: auto; display: block; }
 .wordmark-glyph .splat-mark-canvas {
   width: 1.8em; height: 1.8em; display: block;
-  margin: -0.16em -0.34em -0.16em -0.3em;   /* trim the glow padding so the "S" hugs the text */
+  margin: -0.16em -0.68em -0.16em -0.3em;   /* trim the glow padding so the "S" hugs the text */
 }
 .wordmark-rest { line-height: 1; }
 

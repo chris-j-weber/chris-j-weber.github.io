@@ -1,31 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Christoph J. Weber">
   <defs>
     <linearGradient id="cw-bg" x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#151922"/>
-      <stop offset="1" stop-color="#0a0c12"/>
+      <stop offset="0" stop-color="#10131b"/>
+      <stop offset="1" stop-color="#070810"/>
     </linearGradient>
-    <linearGradient id="cw-ink" x1="10" y1="12" x2="54" y2="54" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#c2cad8"/>
-    </linearGradient>
-    <radialGradient id="cw-glow" cx="0.5" cy="0.08" r="0.9">
-      <stop offset="0" stop-color="#3f7bff" stop-opacity="0.5"/>
-      <stop offset="0.6" stop-color="#3f7bff" stop-opacity="0"/>
+    <radialGradient id="cw-glow" cx="0.5" cy="0.62" r="0.62">
+      <stop offset="0" stop-color="#3f7bff" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#3f7bff" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="cw-jhalo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5b93ff" stop-opacity="0.85"/>
+      <stop offset="0.45" stop-color="#4f8bff" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#4f8bff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cw-j" x1="22" y1="30" x2="32" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9dbcff"/>
+      <stop offset="1" stop-color="#4f8bff"/>
+    </linearGradient>
   </defs>
 
-  <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#cw-bg)"
-        stroke="#ffffff" stroke-opacity="0.10" stroke-width="1"/>
-  <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#cw-glow)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="16" fill="url(#cw-bg)" stroke="#ffffff" stroke-opacity="0.09"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="16" fill="url(#cw-glow)"/>
 
-  <!-- C j W  — a blue lowercase "j" for the middle initial of Christoph J. Weber -->
-  <g font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="27"
-     fill="url(#cw-ink)" text-anchor="middle" letter-spacing="-0.5">
-    <text x="19" y="33" dominant-baseline="central">C</text>
-    <text x="46" y="33" dominant-baseline="central">W</text>
+  <!-- neon bloom behind the j (filter-free, renders everywhere) -->
+  <circle cx="28.19" cy="41" r="15" fill="url(#cw-jhalo)"/>
+
+  <!-- C and W as outlines (no font dependency in the favicon renderer) -->
+  <g fill="#c7cede">
+    <path d="M21.02 34.63L24.94 35.88Q24.04 39.16 21.94 40.75Q19.84 42.34 16.62 42.34Q12.62 42.34 10.05 39.62Q7.48 36.89 7.48 32.16Q7.48 27.15 10.06 24.39Q12.65 21.62 16.86 21.62Q20.54 21.62 22.84 23.79Q24.2 25.07 24.89 27.48L20.88 28.44Q20.52 26.88 19.4 25.98Q18.27 25.07 16.66 25.07Q14.43 25.07 13.04 26.67Q11.65 28.27 11.65 31.85Q11.65 35.66 13.02 37.27Q14.39 38.88 16.57 38.88Q18.19 38.88 19.35 37.86Q20.51 36.83 21.02 34.63Z"/>
+    <path d="M36.33 42.0L31.54 21.96L35.68 21.96L38.7 35.73L42.37 21.96L47.18 21.96L50.69 35.96L53.77 21.96L57.84 21.96L52.98 42.0L48.69 42.0L44.69 27.02L40.71 42.0L36.33 42.0Z"/>
   </g>
-  <g fill="none" stroke="#3f7bff" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M32 38 L32 47 Q32 50.6 28.4 50.6 Q25.3 50.6 24.8 47.4"/>
-  </g>
-  <circle cx="32" cy="33" r="3.3" fill="#3f7bff"/>
+
+  <!-- the middle initial: a glowing blue lowercase "j" -->
+  <path d="M28.19 38.4 L28.19 47.8 Q28.19 51.2 24.9 51.2 Q21.9 51.2 21.4 48.1" fill="none"
+        stroke="url(#cw-j)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="28.19" cy="33.2" r="2.2" fill="url(#cw-j)"/>
 </svg>
