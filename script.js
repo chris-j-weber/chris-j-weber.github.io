@@ -180,6 +180,118 @@ const initCardVideos = (videos) => {
   videos.forEach((video) => observer.observe(video));
 };
 
+// --- Splat Designer particle logo mark ---
+// A compact, animated "S" rendered as drifting, twinkling gradient particles —
+// the same rendering language as the standalone Splat Designer wordmark, sized
+// down to a 40px brand mark. Pauses when off-screen; static under reduced motion.
+const initSplatMarks = (canvases) => {
+  if (!canvases.length) return;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const STOPS = [[0, "#38E0C8"], [0.28, "#4EA8FF"], [0.54, "#8B7BFF"], [0.78, "#FF6AAE"], [1, "#FFB454"]];
+  const hex = (c) => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+  const palette = (t) => {
+    t = Math.max(0, Math.min(1, t));
+    for (let i = 1; i < STOPS.length; i++) {
+      if (t <= STOPS[i][0]) {
+        const a = STOPS[i - 1], b = STOPS[i], k = (t - a[0]) / (b[0] - a[0]), ca = hex(a[1]), cb = hex(b[1]);
+        return [ca[0] + (cb[0] - ca[0]) * k, ca[1] + (cb[1] - ca[1]) * k, ca[2] + (cb[2] - ca[2]) * k];
+      }
+    }
+    return hex(STOPS[STOPS.length - 1][1]);
+  };
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const build = (canvas) => {
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width || 40, H = rect.height || 40;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+    // Sample a bold "S" into particles.
+    const SS = 120, src = document.createElement("canvas");
+    src.width = SS; src.height = SS;
+    const sx = src.getContext("2d");
+    sx.fillStyle = "#000";
+    sx.font = '800 104px "Helvetica Neue",Arial,sans-serif';
+    sx.textAlign = "center"; sx.textBaseline = "middle";
+    sx.fillText("S", SS / 2, SS / 2 + 4);
+    const data = sx.getImageData(0, 0, SS, SS).data;
+
+    const gap = 3.3, raw = [];
+    for (let y = 0; y < SS; y += gap) {
+      const yi = y | 0;
+      for (let x = 0; x < SS; x += gap) {
+        const xi = x | 0;
+        if (data[(yi * SS + xi) * 4 + 3] > 128) {
+          raw.push({ x: xi + (Math.random() - 0.5) * gap, y: yi + (Math.random() - 0.5) * gap, a: 1 });
+          // A few particles scatter off toward the trailing edge (the "splat" dissolve).
+          if (xi > SS * 0.5 && Math.random() < 0.12) {
+            raw.push({ x: xi + Math.random() * 16 + 4, y: yi + (Math.random() - 0.5) * 16, a: 0.55 });
+          }
+        }
+      }
+    }
+
+    const scale = Math.min(W * 0.86 / SS, H * 0.86 / SS);
+    const ox = (W - SS * scale) / 2, oy = (H - SS * scale) / 2;
+    const parts = raw.map((p) => ({
+      x: ox + p.x * scale, y: oy + p.y * scale, a: p.a,
+      col: palette(p.x / SS), ph: Math.random() * 6.2832, rs: Math.random(),
+      amp: 1.15 * scale * (p.a < 1 ? 2 : 1),
+    }));
+    return { ctx, W, H, parts, r: 1.9 * scale };
+  };
+
+  const draw = (rec, t) => {
+    const { ctx, W, H, parts, r } = rec;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < parts.length; i++) {
+      const p = parts[i];
+      const dx = Math.sin(t * 0.9 + p.ph) * p.amp, dy = Math.cos(t * 0.72 + p.ph * 1.3) * p.amp;
+      const tw = 0.84 + 0.16 * Math.sin(t * 1.7 + p.ph * 1.7);
+      const X = p.x + dx, Y = p.y + dy, c = p.col, rr = r * (0.82 + 0.36 * p.rs);
+      ctx.globalAlpha = 0.16 * p.a * tw;
+      ctx.fillStyle = "rgb(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ")";
+      ctx.beginPath(); ctx.arc(X, Y, rr * 2.6, 0, 6.2832); ctx.fill();
+      const cr = c[0] + (255 - c[0]) * 0.5, cg = c[1] + (255 - c[1]) * 0.5, cb = c[2] + (255 - c[2]) * 0.5;
+      ctx.globalAlpha = p.a * tw;
+      ctx.fillStyle = "rgb(" + (cr | 0) + "," + (cg | 0) + "," + (cb | 0) + ")";
+      ctx.beginPath(); ctx.arc(X, Y, rr * 0.9, 0, 6.2832); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+  };
+
+  canvases.forEach((canvas) => {
+    let rec = build(canvas), startT = null, lastT = -1e9, rafId = null, visible = true;
+    const frame = (ts) => {
+      if (startT == null) startT = ts;
+      if (ts - lastT >= 32) { lastT = ts; draw(rec, (ts - startT) / 1000); }
+      rafId = requestAnimationFrame(frame);
+    };
+    const stop = () => { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } };
+    const play = () => { if (!rafId && visible && !reduce) { startT = null; lastT = -1e9; rafId = requestAnimationFrame(frame); } };
+
+    if (reduce) { draw(rec, 0); }
+    else { play(); }
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        if (visible) { if (reduce) draw(rec, 0); else play(); } else stop();
+      }, { threshold: 0.1 }).observe(canvas);
+    }
+
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => { stop(); rec = build(canvas); if (reduce) draw(rec, 0); else play(); }, 200);
+    });
+  });
+};
+
 // --- Horizontal project carousel: arrows, dots, swipe, gentle auto-rotate ---
 const initProjectCarousel = ({ carousel, track, prevBtn, nextBtn, dots }) => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -329,31 +441,36 @@ const init = () => {
       projects.forEach((proj) => {
         const tagsHtml = proj.tags.map(t => `<span class="badge tag-badge">${t}</span>`).join("");
 
-        let logoMarkup;
+        // Brand lockup. For projects with a logo glyph the coloured mark stands
+        // in for the first letter of the name (like the Asset Hub site header:
+        // an "A" glyph followed by "sset Hub"); the rest of the name follows as
+        // text. Non-glyph projects keep the small square mark + title.
+        const rest = proj.title.slice(1);
+        let brandMarkup;
         if (proj.useSvgLogo) {
-          logoMarkup = `
-            <span class="project-logo-mark asset-hub-mark">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="225 260 600 600" width="20" height="20">
-                <defs>
-                  <linearGradient id="g-logo-${proj.id}" x1="150" y1="210" x2="780" y2="210" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#7a2cff"/>
-                    <stop offset="25%" stop-color="#8c7bff"/>
-                    <stop offset="52%" stop-color="#1ec8e8"/>
-                    <stop offset="65%" stop-color="#46d17a"/>
-                    <stop offset="78%" stop-color="#f0cf4c"/>
-                    <stop offset="90%" stop-color="#ff9540"/>
-                    <stop offset="100%" stop-color="#ff4338"/>
-                  </linearGradient>
-                </defs>
-                <g transform="translate(110,100) scale(0.9)">
-                  <polygon fill="url(#g-logo-${proj.id})" points="150,810 370,210 500,210 280,810"/>
-                  <polygon fill="url(#g-logo-${proj.id})" points="430,210 650,810 780,810 560,210"/>
-                </g>
-              </svg>
-            </span>
-          `;
+          const glyph = `
+            <svg class="wordmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="225 260 600 600" role="img" aria-hidden="true">
+              <defs>
+                <linearGradient id="g-logo-${proj.id}" x1="150" y1="210" x2="780" y2="210" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#7a2cff"/>
+                  <stop offset="25%" stop-color="#8c7bff"/>
+                  <stop offset="52%" stop-color="#1ec8e8"/>
+                  <stop offset="65%" stop-color="#46d17a"/>
+                  <stop offset="78%" stop-color="#f0cf4c"/>
+                  <stop offset="90%" stop-color="#ff9540"/>
+                  <stop offset="100%" stop-color="#ff4338"/>
+                </linearGradient>
+              </defs>
+              <g transform="translate(110,100) scale(0.9)">
+                <polygon fill="url(#g-logo-${proj.id})" points="150,810 370,210 500,210 280,810"/>
+                <polygon fill="url(#g-logo-${proj.id})" points="430,210 650,810 780,810 560,210"/>
+              </g>
+            </svg>`;
+          brandMarkup = `<h3 class="project-card-title project-wordmark mb-0" aria-label="${proj.title}"><span class="wordmark-glyph">${glyph}</span><span class="wordmark-rest">${rest}</span></h3>`;
+        } else if (proj.splatLogo) {
+          brandMarkup = `<h3 class="project-card-title project-wordmark mb-0" aria-label="${proj.title}"><span class="wordmark-glyph"><canvas class="splat-mark-canvas" aria-hidden="true"></canvas></span><span class="wordmark-rest">${rest}</span></h3>`;
         } else {
-          logoMarkup = `<span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span>`;
+          brandMarkup = `<span class="project-logo-mark vr-setdesigner-mark">${proj.logoText}</span><h3 class="project-card-title mb-0">${proj.title}</h3>`;
         }
 
         // Prefer a walkthrough video when the project provides one; the
@@ -374,8 +491,7 @@ const init = () => {
           </div>
           <div class="project-card-inner">
             <div class="project-brand mb-2">
-              ${logoMarkup}
-              <h3 class="project-card-title mb-0">${proj.title}</h3>
+              ${brandMarkup}
             </div>
             <p class="project-card-subtitle">${proj.subtitle}</p>
             <p class="project-card-description">${proj.description}</p>
@@ -420,6 +536,7 @@ const init = () => {
       initProjectCarousel({ carousel, track, prevBtn, nextBtn, dots });
       initImageParallax(Array.from(track.querySelectorAll(".project-card-image")));
       initCardVideos(Array.from(track.querySelectorAll(".project-card-video")));
+      initSplatMarks(Array.from(track.querySelectorAll(".splat-mark-canvas")));
     });
 
   // Load publications

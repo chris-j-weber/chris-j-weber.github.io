@@ -293,9 +293,13 @@ a:hover { color: #b9c6ff; }
 .carousel-track > .project-card {
   flex: 0 0 100%;
   scroll-snap-align: start;
+  height: 580px;               /* uniform size for every card, now and future */
 }
 @media (min-width: 768px) {
   .carousel-track > .project-card { flex-basis: calc((100% - 1.5rem) / 2); }
+}
+@media (max-width: 575px) {
+  .carousel-track > .project-card { height: 600px; }
 }
 
 /* Controls: prev · dots · next */
@@ -378,7 +382,7 @@ a:hover { color: #b9c6ff; }
   flex: 1 1 auto;
 }
 
-.project-brand { display: flex; align-items: center; gap: 0.7rem; }
+.project-brand { display: flex; align-items: center; gap: 0.7rem; min-height: 40px; }
 .project-logo-mark {
   width: 40px; height: 40px;
   border-radius: 11px;
@@ -388,6 +392,28 @@ a:hover { color: #b9c6ff; }
   border: 1px solid var(--border);
 }
 .vr-setdesigner-mark { color: var(--accent-soft); }
+
+/* Wordmark lockup: a coloured glyph stands in for the first letter of the
+   name, the rest of the name follows as text (no square badge). */
+.project-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.04em;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.wordmark-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.wordmark-svg { height: 1.14em; width: auto; display: block; }
+.wordmark-glyph .splat-mark-canvas {
+  width: 1.8em; height: 1.8em; display: block;
+  margin: -0.16em -0.34em -0.16em -0.3em;   /* trim the glow padding so the "S" hugs the text */
+}
+.wordmark-rest { line-height: 1; }
 
 .project-card-title {
   font-weight: 600;
@@ -441,6 +467,11 @@ a:hover { color: #b9c6ff; }
   line-height: 1.55;
   margin-bottom: 1.1rem;
   flex-grow: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;        /* keep every card the same height */
+  line-clamp: 4;
+  overflow: hidden;
 }
 
 .project-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.1rem; }

@@ -15,7 +15,7 @@
   },
   {
     "id": "vr-setdesigner",
-    "title": "VR Setdesigner",
+    "title": "Splat Designer",
     "subtitle": "Immersive Spatial Scenography (HFF München)",
     "description": "A high-fidelity Virtual Reality design suite leveraging 3D Gaussian Splatting to bridge physical prop libraries and virtual production stages.",
     "status": "Research",
@@ -23,6 +23,7 @@
     "image": "images/vr_setdesigner_preview.png",
     "link": "https://hffmuc.github.io/vr-setdesigner/",
     "logoText": "VR",
-    "useSvgLogo": false
+    "useSvgLogo": false,
+    "splatLogo": true
   }
 ]
